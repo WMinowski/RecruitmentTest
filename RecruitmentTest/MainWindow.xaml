@@ -1,0 +1,64 @@
+﻿<Window x:Class="RecruitmentTest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RecruitmentTest"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Initialized="OnInit" Loaded="OnLoad">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="496*"/>
+            <ColumnDefinition Width="297*"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid x:Name="dataGrid1" AutoGeneratingColumn="OnAutoGeneratingColumn" HorizontalAlignment="Left" Height="399" Margin="10,10,0,0" VerticalAlignment="Top" Width="537" SelectedItem="{Binding SelectedCustomer}" Grid.ColumnSpan="2" ItemsSource="{Binding Customers}">
+            <!--<DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}"/>
+                <DataGridTextColumn Binding="{Binding FirstName}"/>
+                <DataGridTextColumn Binding="{Binding DateOfBirth}"/>
+                <DataGridTextColumn Binding="{Binding Street}"/>
+                <DataGridTextColumn Binding="{Binding City}"/>
+            </DataGrid.Columns>-->
+        </DataGrid>
+        <Label Content="Name" HorizontalAlignment="Left" Margin="57,53,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="20" Grid.Column="1"/>
+        <Label Content="First Name" HorizontalAlignment="Left" Margin="57,94,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18" Grid.Column="1"/>
+        <Label Content="Date of Birth" HorizontalAlignment="Left" Margin="57,135,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18" Grid.Column="1"/>
+        <Label Content="Street" HorizontalAlignment="Left" Margin="57,176,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18" Grid.Column="1"/>
+        <Label Content="City" HorizontalAlignment="Left" Margin="57,217,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18" Grid.Column="1"/>
+        <TextBox x:Name="textBoxName" HorizontalAlignment="Left" Height="36" Margin="169,53,0,0" TextWrapping="Wrap" Text="{Binding Path = TextBoxName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalAlignment="Top" Width="117" Grid.Column="1"/>
+        <TextBox x:Name="textBoxFirstName" HorizontalAlignment="Left" Height="36" Margin="169,94,0,0" TextWrapping="Wrap" Text="{Binding Path = TextBoxFirstName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalAlignment="Top" Width="117" Grid.Column="1"/>
+        <TextBox x:Name="textBoxStreet"  HorizontalAlignment="Left" Height="36" Margin="169,176,0,0" TextWrapping="Wrap" Text="{Binding Path= TextBoxStreet, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalAlignment="Top" Width="117" Grid.Column="1"/>
+        <Button Content="Add"  HorizontalAlignment="Left" Margin="57,258,0,0" VerticalAlignment="Top" Width="112" Height="33"  Command="{Binding AddCommand}" Grid.Column="1"/>
+        <Button Content="Remove" HorizontalAlignment="Left" Margin="173,258,0,0" VerticalAlignment="Top" Width="114" Height="33" Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
+        <Button Content="Update" HorizontalAlignment="Left" Margin="57,296,0,0" VerticalAlignment="Top" Width="112" Height="35" Command="{Binding UpdCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
+        <Button Content="Search" HorizontalAlignment="Left" Margin="173,296,0,0" VerticalAlignment="Top" Width="114" Height="35" Command="{Binding SearchCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
+        <ComboBox x:Name="comboBoxCity" Grid.Column="1" HorizontalAlignment="Left" Margin="169,217,0,0" VerticalAlignment="Top" Width="118" Height="36" ItemsSource="{ Binding Path = Cities }" SelectedItem="{Binding Path=SelectedCity}" DisplayMemberPath="Name" />
+        <DatePicker x:Name="datePicker" SelectedDate="{Binding Path=SelectedDate}" Grid.Column="1" HorizontalAlignment="Left" Margin="169,135,0,0" VerticalAlignment="Top"  Height="36" Width="118"/>
+        <Button Content="Load DataBase" HorizontalAlignment="Left" Margin="57,336,0,0" VerticalAlignment="Top" Width="230" Height="35" Click="Load_Button_Click" Grid.Column="1"/>
+        <Label Content="Id" HorizontalAlignment="Left" Margin="57,10,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="20" Grid.Column="1"/>
+        <TextBox x:Name="textBoxId" HorizontalAlignment="Left" Height="36" Margin="169,10,0,0" TextWrapping="Wrap" Text="{Binding TextBoxId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="117" Grid.Column="1"/>
+
+    </Grid>
+    <Window.Resources>
+        <Style TargetType="{x:Type Control}" x:Key="DatePickerTextBoxStyle">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{x:Null}"/>
+        </Style>
+
+        <Style TargetType="{x:Type DatePickerTextBox}" >
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <TextBox x:Name="PART_TextBox"
+                             Text="{Binding Path=SelectedDate, StringFormat='yyyy-MM-dd', RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" Style="{StaticResource DatePickerTextBoxStyle}" >
+                        </TextBox>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+</Window>
+    
+
