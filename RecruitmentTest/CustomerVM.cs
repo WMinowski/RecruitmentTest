@@ -9,7 +9,7 @@ using Domain;
 
 namespace RecruitmentTest
 {
-    public class CustomerVM : INotifyPropertyChanged
+    public class CustomerVM : INotifyPropertyChanged//, IDataErrorInfo
     {
         
         private Customer _customer;
@@ -73,6 +73,56 @@ namespace RecruitmentTest
             }
             //no set for non-modified City collection
         }
+
+        //public string Error
+        //{
+        //    get { return null; }
+        //}
+
+        //public string this[string columnName]
+        //{
+        //    get
+        //    {
+        //        string result = null;
+        //        //TODO: validation logic
+        //        if(columnName == "Name")
+        //        {
+        //            if(Name == string.Empty)
+        //            {
+        //                result = "Empty field!";
+        //            }
+        //        }
+        //        if (columnName == "First name")
+        //        {
+        //            if (FirstName == string.Empty)
+        //            {
+        //                result = "Empty field!";
+        //            }
+        //        }
+        //        if (columnName == "Date of birth")
+        //        {
+        //            if (DateOfBirth == null)
+        //            {
+        //                result = "Empty field!";
+        //            }
+        //        }
+        //        if (columnName == "Street")
+        //        {
+        //            if (Street == string.Empty)
+        //            {
+        //                result = "Empty field!";
+        //            }
+        //        }
+        //        if (columnName == "City")
+        //        {
+        //            if (City == string.Empty)
+        //            {
+        //                result = "Empty field!";
+        //            }
+        //        }
+        //        return result;
+        //    }
+        //}
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")

@@ -14,6 +14,8 @@ using DataFormat = RestSharp.DataFormat;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Domain;
+using System.Web.UI.WebControls;
+using System.Windows.Controls;
 
 namespace RecruitmentTest
 {
@@ -38,12 +40,13 @@ namespace RecruitmentTest
                 OnPropertyChanged("SelectedCustomer");
                 if (_selectedCustomer != null)
                 {
-                    TextBoxId = _selectedCustomer.Id.ToString();
+                    //TextBoxId = _selectedCustomer.Id.ToString();
                     TextBoxName = _selectedCustomer.Name;
                     TextBoxFirstName = _selectedCustomer.FirstName;
                     SelectedDate = _selectedCustomer.DateOfBirth;
                     TextBoxStreet = _selectedCustomer.Street;
-                    SelectedCity = Cities.ToList().Find(x => x.Name == _selectedCustomer.City);
+                    //SelectedCity = Cities.ToList().Find(x => x.Name == _selectedCustomer.City);
+                    SelectedCity = Cities.First<CityVM>(x => x.Name == _selectedCustomer.City);
                 }
             }
         }
@@ -57,18 +60,20 @@ namespace RecruitmentTest
                 OnPropertyChanged("SelectedCity");
             }
         }
-        private string _textBoxId;
-        public string TextBoxId
-        {
-            get { return _textBoxId; }
-            set
-            {
-                _textBoxId = value;
-                OnPropertyChanged("TextBoxId");
+        
+        
+        //private string _textBoxId;
+        //public string TextBoxId
+        //{
+        //    get { return _textBoxId; }
+        //    set
+        //    {
+        //        _textBoxId = value;
+        //        OnPropertyChanged("TextBoxId");
 
 
-            }
-        }
+        //    }
+        //}
         private string _textBoxName;
         public string TextBoxName
         {
@@ -77,7 +82,7 @@ namespace RecruitmentTest
             {
                 _textBoxName = value;
                 OnPropertyChanged("TextBoxName");
-
+                
  
             }
         }
@@ -122,7 +127,7 @@ namespace RecruitmentTest
                 return _addCommand ??
                   (_addCommand = new RelayCommand(obj =>
                   {
-                      if (TextBoxId==string.Empty|| TextBoxName == String.Empty || TextBoxFirstName == String.Empty ||
+                      if (TextBoxName == String.Empty || TextBoxFirstName == String.Empty ||
                         SelectedDate == null || TextBoxStreet == String.Empty ||
                         SelectedCity == null)
                       {
@@ -148,7 +153,7 @@ namespace RecruitmentTest
                               //connection.Close();
 
 
-                              CustomerVM customer = new CustomerVM(new Customer(int.Parse(TextBoxId), TextBoxName, TextBoxFirstName, SelectedDate, TextBoxStreet, SelectedCity.ToCity()));
+                              CustomerVM customer = new CustomerVM(new Customer(0, TextBoxName, TextBoxFirstName, SelectedDate, TextBoxStreet, SelectedCity.ToCity()));
                               Customers.Insert(0, customer);
                               SelectedCustomer = customer;
 
@@ -174,7 +179,7 @@ namespace RecruitmentTest
                       
                       //DataBase
 
-                  },(obj)=>(SelectedCustomer==null||SelectedCustomer.Id!=int.Parse(TextBoxId)||SelectedCustomer.Name!=TextBoxName||SelectedCustomer.FirstName!=TextBoxFirstName||SelectedCustomer.DateOfBirth!=SelectedDate||SelectedCustomer.Street!=TextBoxStreet||SelectedCustomer.City!=SelectedCity.Name)
+                  },(obj)=>(SelectedCustomer==null||SelectedCustomer.Name!=TextBoxName||SelectedCustomer.FirstName!=TextBoxFirstName||SelectedCustomer.DateOfBirth!=SelectedDate||SelectedCustomer.Street!=TextBoxStreet||SelectedCustomer.City!=SelectedCity.Name)
                   ));
             }
         }
@@ -261,7 +266,7 @@ namespace RecruitmentTest
                           //  @" WHERE (" +
                           //  @"Name = '" + SelectedCustomer.Name +
                           //  @"') AND (FirstName = '" + SelectedCustomer.FirstName + @"')";
-                          if (TextBoxId == string.Empty || TextBoxName == String.Empty || TextBoxFirstName == String.Empty ||
+                          if (TextBoxName == String.Empty || TextBoxFirstName == String.Empty ||
                         SelectedDate == null || TextBoxStreet == String.Empty ||
                         SelectedCity == null)
                           {
@@ -279,7 +284,7 @@ namespace RecruitmentTest
                               //((MainWindowVM)DataContext).LoadDatabase("select customers.Name, customers.FirstName, customers.DateOfBirth, customers.Street, cities.City from customers left join cities on customers.CityId=cities.Id");
                               //dataGrid1.ItemsSource = ((MainWindowVM)DataContext).Customers;
 
-                              CustomerVM newcustomer = new CustomerVM(new Customer(int.Parse(TextBoxId), TextBoxName, TextBoxFirstName, SelectedDate, TextBoxStreet, SelectedCity.ToCity()));
+                              CustomerVM newcustomer = new CustomerVM(new Customer(0, TextBoxName, TextBoxFirstName, SelectedDate, TextBoxStreet, SelectedCity.ToCity()));
                               RestRequest request = new RestRequest("api/customer/" + customer.Id.ToString(), Method.PUT);
                               request.AddJsonBody(newcustomer.Customer);
                               request.RequestFormat = DataFormat.Json;
@@ -323,7 +328,7 @@ namespace RecruitmentTest
 
                       //string query = "select customers.Name, customers.FirstName, customers.DateOfBirth, customers.Street, cities.City from customers left join cities on customers.CityId=cities.Id where";
                       Dictionary<string, string> textFields = new Dictionary<string, string>();
-                      textFields.Add("Id", TextBoxId);
+                      
                       textFields.Add("Name", TextBoxName);
                       textFields.Add("FirstName", TextBoxFirstName);
                       textFields.Add("DateOfBirth", SelectedDate.ToString("yyyy-MM-dd"));
@@ -362,12 +367,12 @@ namespace RecruitmentTest
                       {
                           fields.Add(kvp);
                       }
-                      if (fields[0].Value != string.Empty) { filteredList = (filteredList.Where(x => x.Id == int.Parse(TextBoxId))).ToList(); }
-                      if (fields[1].Value != string.Empty) { filteredList = filteredList.Where(x => x.Name == TextBoxName).ToList(); }
-                      if (fields[2].Value != string.Empty) { filteredList = filteredList.Where(x => x.FirstName == TextBoxFirstName).ToList(); }
-                      if (fields[3].Value != string.Empty) { filteredList = filteredList.Where(x => x.DateOfBirth == SelectedDate).ToList(); }
-                      if (fields[4].Value != string.Empty) { filteredList = filteredList.Where(x => x.Street == TextBoxStreet).ToList(); }
-                      if (fields[5].Value != string.Empty) { filteredList = filteredList.Where(x => x.City == SelectedCity.Name).ToList(); }
+                      //if (fields[0].Value != string.Empty) { filteredList = (filteredList.Where(x => x.Id == int.Parse(TextBoxId))).ToList(); }
+                      if (fields[0].Value != string.Empty) { filteredList = filteredList.Where(x => x.Name == TextBoxName).ToList(); }
+                      if (fields[1].Value != string.Empty) { filteredList = filteredList.Where(x => x.FirstName == TextBoxFirstName).ToList(); }
+                      if (fields[2].Value != string.Empty) { filteredList = filteredList.Where(x => x.DateOfBirth == SelectedDate).ToList(); }
+                      if (fields[3].Value != string.Empty) { filteredList = filteredList.Where(x => x.Street == TextBoxStreet).ToList(); }
+                      if (fields[4].Value != string.Empty) { filteredList = filteredList.Where(x => x.City == SelectedCity.Name).ToList(); }
                       Customers.Clear();
                       foreach (CustomerVM c in filteredList)
                       {
@@ -428,14 +433,11 @@ namespace RecruitmentTest
         {
 
             LoadDatabase();
-            
-            //LoadDatabase("select customers.Name, customers.FirstName, customers.DateOfBirth, customers.Street, cities.City from customers left join cities on customers.CityId=cities.Id");
 
-            //TODO: Load&Init Database
 
         }
 
-        private void ClearText()
+        public void ClearText()
         {
             TextBoxName = String.Empty;
             TextBoxFirstName = String.Empty;
