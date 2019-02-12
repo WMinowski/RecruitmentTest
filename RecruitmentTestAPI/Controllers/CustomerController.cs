@@ -23,7 +23,7 @@ namespace RecruitmentTestAPI.Controllers
             return temp;
         }
 
-        [HttpGet("{id:length(24)}", Name = "GetCustomer")]
+        [HttpGet("{id}", Name = "GetCustomer")]
         public ActionResult<Customer> Get(string id)
         {
             var customer = _customerService.Get(int.Parse(id));
@@ -44,7 +44,7 @@ namespace RecruitmentTestAPI.Controllers
             return CreatedAtRoute("GetCustomer", new { id = customer.Id.ToString() }, customer);
         }
 
-        [HttpPut("{id:length(24)}")]
+        [HttpPut("{id}")]
         public IActionResult Update(string id, Customer customerIn)
         {
             var customer = _customerService.Get(int.Parse(id));
@@ -59,7 +59,7 @@ namespace RecruitmentTestAPI.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id:length(24)}")]
+        [HttpDelete("{id}")]//:length(24)}")]
         public IActionResult Delete(string id)
         {
             var customer = _customerService.Get(int.Parse(id));

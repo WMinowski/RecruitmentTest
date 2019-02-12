@@ -11,30 +11,23 @@ namespace RecruitmentTest
 {
     public class CityVM : INotifyPropertyChanged
     {
-        private City _city;
-        public City City
-        {
-            get
-            {
-                return _city;
-            }
-            //set { _city = value; }
-        }
+        private int _id;
+        private string _name;
         public int Id
         {
-            get { return _city.Id; }
+            get { return _id; }
             set
             {
-                _city.Id = value;
+                _id = value;
                 OnPropertyChanged("Id");
             }
         }
         public string Name
         {
-            get { return _city.Name; }
+            get { return _name; }
             set
             {
-                _city.Name = value;
+                _name = value;
                 OnPropertyChanged("Name");
             }
         }
@@ -42,13 +35,13 @@ namespace RecruitmentTest
         
         public CityVM(int id, string name)
         {
-            _city = new City(id, name);
+            //_city = new City(id, name);
             Id = id;
             Name = name;
         }
         public CityVM(Domain.City city)
         {
-            _city = city;
+            //_city = city;
             Id = city.Id;
             Name = city.Name;
         }

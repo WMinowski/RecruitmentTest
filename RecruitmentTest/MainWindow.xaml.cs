@@ -274,6 +274,7 @@ namespace RecruitmentTest
         {
             dataGrid1.ItemsSource = null;
             ((MainWindowVM)DataContext).Customers.Clear();
+            ((MainWindowVM)DataContext).Cities.Clear();
             ((MainWindowVM)DataContext).LoadDatabase();
             dataGrid1.ItemsSource = ((MainWindowVM)DataContext).Customers;
         }

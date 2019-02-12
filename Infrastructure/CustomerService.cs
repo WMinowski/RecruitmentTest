@@ -69,7 +69,7 @@ namespace Infrastructure
                 connection.Open();
                 adapter.DeleteCommand.ExecuteNonQuery();
             }
-            _cities.RemoveAt(id);
+            _cities.Remove(_cities.Find(x=>x.Id==id));
         }
 
         public void RemoveCity(City cityIn)
@@ -117,7 +117,7 @@ namespace Infrastructure
                 adapter.InsertCommand.Parameters.Add("@City", MySqlDbType.VarChar).Value = city.Name;
 
 
-
+                connection.Open();
                 adapter.InsertCommand.ExecuteNonQuery();
             }
             _cities.Add(city);
@@ -167,7 +167,7 @@ namespace Infrastructure
                 adapter.InsertCommand.Parameters.Add("@City", MySqlDbType.Int32).Value = customer.City.Id;
 
 
-
+                connection.Open();
                 adapter.InsertCommand.ExecuteNonQuery();
             }
             _customers.Add(customer);
@@ -179,14 +179,13 @@ namespace Infrastructure
             using (MySqlConnection connection = GetConnection())
             {
                 string query =
-                            @"UPDATE customers SET Id =" + customerIn.Id + " ,Name = '" + customerIn.Name +
+                            @"UPDATE customers SET Id = " + customerIn.Id + " ,Name = '" + customerIn.Name +
                             @"',FirstName = '" + customerIn.FirstName +
                             @"',DateOfBirth = '" + customerIn.DateOfBirth.ToString("yyyy-MM-dd") + 
                             @"' ,Street = '" + customerIn.Street +
-                            @"',CityId = " + customerIn.Id.ToString() +
+                            @"',CityId = " + customerIn.City.Id.ToString() +
                             @" WHERE (" +
-                            @"Name = '" + customerIn.Name +
-                            @"') AND (FirstName = '" + customerIn.FirstName + @"')";
+                            @"Id = " + id + @")";
 
                 MySqlDataAdapter localAadapter = new MySqlDataAdapter();
 
@@ -218,11 +217,11 @@ namespace Infrastructure
             using (MySqlConnection connection = GetConnection())
             {
                 adapter.DeleteCommand =
-                                      new MySqlCommand("DELETE FROM mydb.customers WHERE (Id = " + id.ToString() + ");", connection);
+                                      new MySqlCommand("DELETE FROM mydb.customers WHERE (Id = '" + id.ToString() + "');", connection);
                 connection.Open();
                 adapter.DeleteCommand.ExecuteNonQuery();
             }
-            _customers.RemoveAt(id);
+            _customers.Remove(_customers.Find(x=>x.Id==id));
         }
     }
 }

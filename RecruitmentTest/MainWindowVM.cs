@@ -12,7 +12,7 @@ using System.Windows;
 using RestSharp;
 using DataFormat = RestSharp.DataFormat;
 using System.Reflection;
-
+using System.Text.RegularExpressions;
 using Domain;
 
 namespace RecruitmentTest
@@ -23,8 +23,8 @@ namespace RecruitmentTest
         //    new MySqlConnection(@"Server=localhost;Database=mydb;Uid=root;password=Password*;Convert Zero Datetime = true; Allow User Variables = True;");
         //MySqlDataAdapter adapter = new MySqlDataAdapter();
         private CustomerVM _selectedCustomer;
-        public ObservableCollection<CustomerVM> Customers;
-        public List<CityVM> Cities;
+        public ObservableCollection<CustomerVM> Customers { get; set; } = new ObservableCollection<CustomerVM>();
+        public ObservableCollection<CityVM> Cities { get; set; } = new ObservableCollection<CityVM>();
         public CustomerVM SelectedCustomer
         {
             get {
@@ -209,8 +209,8 @@ namespace RecruitmentTest
                                   //adapter.DeleteCommand.ExecuteNonQuery();
                                   //connection.Close();
 
-                                  var request = new RestRequest("api/customer/{id}", Method.DELETE);
-                                  request.AddParameter("id", customer.Id);
+                                  var request = new RestRequest("api/customer/"+customer.Id.ToString(), Method.DELETE);
+                                  //request.AddParameter("id", customer.Id.ToString());
 
                                   var asyncHandler = _restClient.ExecuteAsync(request, r =>
                                   {
@@ -220,6 +220,7 @@ namespace RecruitmentTest
 
                                       }
                                   });
+                                  //_restClient.Execute(request);
 
                                   Customers.Remove(customer);
                                   
@@ -278,25 +279,28 @@ namespace RecruitmentTest
                               //((MainWindowVM)DataContext).LoadDatabase("select customers.Name, customers.FirstName, customers.DateOfBirth, customers.Street, cities.City from customers left join cities on customers.CityId=cities.Id");
                               //dataGrid1.ItemsSource = ((MainWindowVM)DataContext).Customers;
 
-                              
-
-                              Customers.Remove(customer);
                               CustomerVM newcustomer = new CustomerVM(new Customer(int.Parse(TextBoxId), TextBoxName, TextBoxFirstName, SelectedDate, TextBoxStreet, SelectedCity.ToCity()));
+                              RestRequest request = new RestRequest("api/customer/" + customer.Id.ToString(), Method.PUT);
+                              request.AddJsonBody(newcustomer.Customer);
+                              request.RequestFormat = DataFormat.Json;
+                              Customers.Remove(customer);
+                              
                               Customers.Insert(0, newcustomer);
                               SelectedCustomer = newcustomer;
 
-                              RestRequest request = new RestRequest("api/customer/{id}", Method.PUT);
-                              request.AddUrlSegment("id", customer.Id);//getting property from removed item
-                              request.AddObject(newcustomer.Customer);// Serialize Domain.Customer, not CustomerVM!!!
+                              
+                              //request.AddUrlSegment("id", customer.Id);//getting property from removed item
+                              // Serialize Domain.Customer, not CustomerVM!!!
 
 
-                              var asyncHandler = _restClient.ExecuteAsync(request, r =>
-                              {
-                                  if (r.ResponseStatus == ResponseStatus.Completed)
-                                  {
-                                      MessageBox.Show("Customer is updated");
-                                  }
-                              });
+                              //var asyncHandler = _restClient.ExecuteAsync(request, r =>
+                              //{
+                              //    if (r.ResponseStatus == ResponseStatus.Completed)
+                              //    {
+                              //        MessageBox.Show("Customer is updated");
+                              //    }
+                              //});
+                              _restClient.Execute(request);
                           }
                           catch (Exception ex)
                           {
@@ -358,12 +362,12 @@ namespace RecruitmentTest
                       {
                           fields.Add(kvp);
                       }
-                      if (fields[0].Value != string.Empty) { filteredList = (List<CustomerVM>)filteredList.Where(x => x.Id == int.Parse(TextBoxId)); }
-                      if (fields[1].Value != string.Empty) { filteredList = (List<CustomerVM>)filteredList.Where(x => x.Name == TextBoxName); }
-                      if (fields[2].Value != string.Empty) { filteredList = (List<CustomerVM>)filteredList.Where(x => x.FirstName == TextBoxFirstName); }
-                      if (fields[3].Value != string.Empty) { filteredList = (List<CustomerVM>)filteredList.Where(x => x.DateOfBirth == SelectedDate); }
-                      if (fields[4].Value != string.Empty) { filteredList = (List<CustomerVM>)filteredList.Where(x => x.Street == TextBoxStreet); }
-                      if (fields[5].Value != string.Empty) { filteredList = (List<CustomerVM>)filteredList.Where(x => x.City == SelectedCity.Name); }
+                      if (fields[0].Value != string.Empty) { filteredList = (filteredList.Where(x => x.Id == int.Parse(TextBoxId))).ToList(); }
+                      if (fields[1].Value != string.Empty) { filteredList = filteredList.Where(x => x.Name == TextBoxName).ToList(); }
+                      if (fields[2].Value != string.Empty) { filteredList = filteredList.Where(x => x.FirstName == TextBoxFirstName).ToList(); }
+                      if (fields[3].Value != string.Empty) { filteredList = filteredList.Where(x => x.DateOfBirth == SelectedDate).ToList(); }
+                      if (fields[4].Value != string.Empty) { filteredList = filteredList.Where(x => x.Street == TextBoxStreet).ToList(); }
+                      if (fields[5].Value != string.Empty) { filteredList = filteredList.Where(x => x.City == SelectedCity.Name).ToList(); }
                       Customers.Clear();
                       foreach (CustomerVM c in filteredList)
                       {
@@ -442,9 +446,9 @@ namespace RecruitmentTest
 
         public void LoadDatabase()
         {
-            Customers = new ObservableCollection<CustomerVM>();
-            Cities = new List<CityVM>();
-
+            //Customers = new ObservableCollection<CustomerVM>();
+            //Cities = new ObservableCollection<CityVM>();
+            
             ///RestSharp part
             ///
             
