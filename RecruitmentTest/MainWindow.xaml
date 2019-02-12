@@ -91,7 +91,7 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
-        <Button Content="Add"  HorizontalAlignment="Left" Margin="57,218,0,0" VerticalAlignment="Top" Width="112" Height="32"  Command="{Binding AddCommand}" Grid.Column="1"/>
+        <Button Content="Add"  HorizontalAlignment="Left" Margin="57,218,0,0" VerticalAlignment="Top" Width="112" Height="32"  Command="{Binding AddCommand }" Grid.Column="1"/>
         <Button Content="Remove" HorizontalAlignment="Left" Margin="173,218,0,0" VerticalAlignment="Top" Width="114" Height="32" Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
         <Button Content="Update" HorizontalAlignment="Left" Margin="57,256,0,0" VerticalAlignment="Top" Width="112" Height="34" Command="{Binding UpdCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
         <Button Content="Search" HorizontalAlignment="Left" Margin="173,256,0,0" VerticalAlignment="Top" Width="114" Height="34" Command="{Binding SearchCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>

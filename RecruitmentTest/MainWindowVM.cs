@@ -21,12 +21,14 @@ namespace RecruitmentTest
 {
     public class MainWindowVM : INotifyPropertyChanged
     {
+        
+        ErrorChecker ec;
         //MySqlConnection connection =
         //    new MySqlConnection(@"Server=localhost;Database=mydb;Uid=root;password=Password*;Convert Zero Datetime = true; Allow User Variables = True;");
         //MySqlDataAdapter adapter = new MySqlDataAdapter();
         private CustomerVM _selectedCustomer;
-        public ObservableCollection<CustomerVM> Customers { get; set; } = new ObservableCollection<CustomerVM>();
-        public ObservableCollection<CityVM> Cities { get; set; } = new ObservableCollection<CityVM>();
+        public ObservableCollection<CustomerVM> Customers { get; } = new ObservableCollection<CustomerVM>();
+        public ObservableCollection<CityVM> Cities { get; } = new ObservableCollection<CityVM>();
         public CustomerVM SelectedCustomer
         {
             get {
@@ -179,7 +181,7 @@ namespace RecruitmentTest
                       
                       //DataBase
 
-                  },(obj)=>(SelectedCustomer==null||SelectedCustomer.Name!=TextBoxName||SelectedCustomer.FirstName!=TextBoxFirstName||SelectedCustomer.DateOfBirth!=SelectedDate||SelectedCustomer.Street!=TextBoxStreet||SelectedCustomer.City!=SelectedCity.Name)
+                  },(obj)=>(!ec.Invoke()&&(SelectedCustomer==null||SelectedCustomer.Name!=TextBoxName||SelectedCustomer.FirstName!=TextBoxFirstName||SelectedCustomer.DateOfBirth!=SelectedDate||SelectedCustomer.Street!=TextBoxStreet||SelectedCustomer.City!=SelectedCity.Name))
                   ));
             }
         }
@@ -429,11 +431,10 @@ namespace RecruitmentTest
             }
         }
 
-        public MainWindowVM()
+        public MainWindowVM(Delegate d)
         {
-
             LoadDatabase();
-
+            ec = (ErrorChecker)d;
 
         }
 
@@ -450,10 +451,13 @@ namespace RecruitmentTest
         {
             //Customers = new ObservableCollection<CustomerVM>();
             //Cities = new ObservableCollection<CityVM>();
-            
+
+            Customers.Clear();
+            Cities.Clear();
             ///RestSharp part
             ///
-            
+
+
             var request = new RestRequest("api/customer", Method.GET);
             //var asyncHandler = _restClient.ExecuteAsync<List<Customer>>(request, r =>
             //{

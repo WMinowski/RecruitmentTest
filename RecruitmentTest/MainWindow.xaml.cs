@@ -23,6 +23,8 @@ using System.Windows.Shapes;
 
 namespace RecruitmentTest
 {
+    public delegate bool ErrorChecker();
+
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
@@ -31,34 +33,26 @@ namespace RecruitmentTest
         public MainWindow()
         {
             InitializeComponent();
-
-            DataContext = new MainWindowVM();
+            //ErrorChecker ec;
+            //ec = hasValidationErrors;
+            DataContext = new MainWindowVM(new ErrorChecker(hasValidationErrors));
             ((MainWindowVM)DataContext).ClearText();
         }
-        
-        
-
-        //private void OnAutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
-        //{
-        //    if ((string)e.Column.Header == "_customer")
-        //    {
-        //        e.Cancel = true;
-        //    }
-        //    if ((string)e.Column.Header == "Customer")
-        //    {
-        //        e.Cancel = true;
-        //    }
-        //    if (e.PropertyType == typeof(System.DateTime))
-        //        (e.Column as DataGridTextColumn).Binding.StringFormat = "yyyy-MM-dd";
-        //}
 
         private void Load_Button_Click(object sender, RoutedEventArgs e)
         {
-            dataGrid1.ItemsSource = null;
-            ((MainWindowVM)DataContext).Customers.Clear();
-            ((MainWindowVM)DataContext).Cities.Clear();
+            //dataGrid1.ItemsSource = null;
+            //((MainWindowVM)DataContext).Customers.Clear();
+            //((MainWindowVM)DataContext).Cities.Clear();
             ((MainWindowVM)DataContext).LoadDatabase();
-            dataGrid1.ItemsSource = ((MainWindowVM)DataContext).Customers;
+            //dataGrid1.ItemsSource = ((MainWindowVM)DataContext).Customers;
+        }
+
+        
+
+        private bool hasValidationErrors()
+        {
+            return (Validation.GetHasError(textBoxName) || Validation.GetHasError(textBoxFirstName) || Validation.GetHasError(textBoxStreet));
         }
     }
 
