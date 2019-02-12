@@ -16,7 +16,8 @@ namespace RecruitmentTest
     public class MainWindowVM : INotifyPropertyChanged
     {
         private RestClient _restClient = new RestClient("http://localhost:5000");
-        ErrorChecker ec;
+        //ErrorChecker ec;
+        IErrorChecker _checker;
         private CustomerVM _selectedCustomer;
         public ObservableCollection<CustomerVM> Customers { get; } = new ObservableCollection<CustomerVM>();
         public ObservableCollection<CityVM> Cities { get; } = new ObservableCollection<CityVM>();
@@ -137,7 +138,7 @@ namespace RecruitmentTest
 
         public bool AddButtonCondition()
         {
-            return !ec() // if 1+ fields are empty - return false
+            return !_checker.HasValidationErrors() // if 1+ fields are empty - return false
                 && (SelectedCustomer == null // if no customer selected - return true
                 || SelectedCustomer.Name != TextBoxName // if one of selected customer fields != proper textbox entry - return true
                 || SelectedCustomer.FirstName != TextBoxFirstName
@@ -288,10 +289,10 @@ namespace RecruitmentTest
             }
         }
 
-        public MainWindowVM(Delegate d)
+        public MainWindowVM(IErrorChecker checker)
         {
             LoadDatabase();
-            ec = (ErrorChecker)d;
+            _checker = checker;
             ClearText();
         }
 
