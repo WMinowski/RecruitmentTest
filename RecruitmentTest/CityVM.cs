@@ -29,13 +29,11 @@ namespace RecruitmentTest
         
         public CityVM(int id, string name)
         {
-            //_city = new City(id, name);
             Id = id;
             Name = name;
         }
         public CityVM(Domain.City city)
         {
-            //_city = city;
             Id = city.Id;
             Name = city.Name;
         }

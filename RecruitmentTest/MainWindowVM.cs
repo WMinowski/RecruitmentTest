@@ -16,7 +16,6 @@ namespace RecruitmentTest
     public class MainWindowVM : INotifyPropertyChanged
     {
         private RestClient _restClient = new RestClient("http://localhost:5000");
-        //ErrorChecker ec;
         IErrorChecker _checker;
         private CustomerVM _selectedCustomer;
         public ObservableCollection<CustomerVM> Customers { get; } = new ObservableCollection<CustomerVM>();
@@ -34,12 +33,12 @@ namespace RecruitmentTest
                 OnPropertyChanged("SelectedCustomer");
                 if (_selectedCustomer != null)
                 {
-                    //TextBoxId = _selectedCustomer.Id.ToString();
+                    
                     TextBoxName = _selectedCustomer.Name;
                     TextBoxFirstName = _selectedCustomer.FirstName;
                     SelectedDate = _selectedCustomer.DateOfBirth;
                     TextBoxStreet = _selectedCustomer.Street;
-                    //SelectedCity = Cities.ToList().Find(x => x.Name == _selectedCustomer.City);
+                    
                     SelectedCity = Cities.First<CityVM>(x => x.Name == _selectedCustomer.City);
                 }
             }
@@ -98,7 +97,7 @@ namespace RecruitmentTest
         }
         
 
-        // команда добавления нового объекта
+        // adding new object command
         private RelayCommand _addCommand;
         public RelayCommand AddCommand
         {
@@ -148,7 +147,7 @@ namespace RecruitmentTest
             // if all fields coincide with textbox entries - return false
         }
 
-        // команда удаления
+        // delete command
         private RelayCommand _removeCommand;
         public RelayCommand RemoveCommand
         {
@@ -173,7 +172,7 @@ namespace RecruitmentTest
                               try
                               {
                                   var request = new RestRequest("api/customer/"+customer.Id.ToString(), Method.DELETE);
-                                  //request.AddParameter("id", customer.Id.ToString());
+                                  
 
                                   var asyncHandler = _restClient.ExecuteAsync(request, r =>
                                   {
@@ -183,7 +182,7 @@ namespace RecruitmentTest
 
                                       }
                                   });
-                                  //_restClient.Execute(request);
+                                  
 
                                   Customers.Remove(customer);
                                   
@@ -260,7 +259,6 @@ namespace RecruitmentTest
                       {
                           fields.Add(kvp);
                       }
-                      //if (fields[0].Value != string.Empty) { filteredList = (filteredList.Where(x => x.Id == int.Parse(TextBoxId))).ToList(); }
                       if (fields[0].Value != string.Empty) { filteredList = filteredList.Where(x => x.Name == TextBoxName).ToList(); }
                       if (fields[1].Value != string.Empty) { filteredList = filteredList.Where(x => x.FirstName == TextBoxFirstName).ToList(); }
                       if (fields[2].Value != string.Empty) { filteredList = filteredList.Where(x => x.DateOfBirth == SelectedDate).ToList(); }

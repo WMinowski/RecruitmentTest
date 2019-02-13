@@ -5,7 +5,7 @@ using Domain;
 
 namespace RecruitmentTest
 {
-    public class CustomerVM : INotifyPropertyChanged//, IDataErrorInfo
+    public class CustomerVM : INotifyPropertyChanged
     {
         
         private Customer _customer;
@@ -63,10 +63,7 @@ namespace RecruitmentTest
         public string City
         {
             get { return _customer.City.Name; }
-            private set
-            {
-                //_customer.City = MainWindowVM.Cities.ToList().Find(x => x.Name == value).ToCity();
-            }
+
             //no set for non-modified City collection
         }
 

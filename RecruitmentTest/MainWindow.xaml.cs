@@ -1,11 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-//using Microsoft.VisualBasic;
-
 namespace RecruitmentTest
 {
-    //public delegate bool ErrorChecker();
 
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
@@ -15,14 +12,9 @@ namespace RecruitmentTest
         public MainWindow()
         {
             InitializeComponent();
-            //ErrorChecker ec;
-            //ec = hasValidationErrors;
             DataContext = new MainWindowVM(this);
             
         }
-
-        
-
         public bool HasValidationErrors()
         {
             return (Validation.GetHasError(textBoxName) || Validation.GetHasError(textBoxFirstName) || Validation.GetHasError(textBoxStreet));
