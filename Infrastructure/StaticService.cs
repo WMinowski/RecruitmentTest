@@ -15,9 +15,18 @@ namespace Infrastructure
         public static string ConnectionString { get; set; }
         public static MySqlDataAdapter adapter = new MySqlDataAdapter();
 
-        static StaticService()
+        //static StaticService()
+        //{
+            
+        //}
+        public static MySqlConnection GetConnection()
         {
-            //ConnectionString = connectionString;
+            return new MySqlConnection(ConnectionString);
+        }
+
+        public static void GetData(string connectionString)
+        {
+            ConnectionString = connectionString;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
@@ -77,10 +86,6 @@ namespace Infrastructure
 
             }
             //TODO: placeUpdate read
-        }
-        public static MySqlConnection GetConnection()
-        {
-            return new MySqlConnection(ConnectionString);
         }
     }
 }

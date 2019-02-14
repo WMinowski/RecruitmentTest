@@ -26,7 +26,7 @@ namespace TodoApi
             services.AddDbContext<TodoContext>(opt =>
                 opt.UseInMemoryDatabase("TodoList"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            StaticService.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
+            StaticService.GetData(Configuration.GetConnectionString("DefaultConnection"));
             services.Add(new ServiceDescriptor(typeof(CustomerService), new CustomerService()));
             services.Add(new ServiceDescriptor(typeof(CityService), new CityService()));
             services.Add(new ServiceDescriptor(typeof(PlaceService), new PlaceService()));

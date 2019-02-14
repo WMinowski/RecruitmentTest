@@ -8,9 +8,10 @@ namespace Infrastructure
 {
     public class PlaceUpdateService : ICRUD
     {
+        
         public PlaceUpdateService()
         {
-
+            
         }
 
         public void Remove(int id)
