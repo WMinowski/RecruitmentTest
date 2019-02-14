@@ -10,7 +10,6 @@ using System.Windows;
 using RestSharp;
 using DataFormat = RestSharp.DataFormat;
 using DomainStandard;
-using System.Windows.Controls;
 
 namespace RecruitmentTest
 {
@@ -280,33 +279,15 @@ namespace RecruitmentTest
                                       newPlacesUpdates.Add(p);
                                   }
                               }
-                              //if (newPlacesUpdates.Where(x => x.CustomerId == customer.Id).Except(PlacesUpdates.Where(x => x.CustomerId == customer.Id)).Count() > 0)
-                              if((newPlacesUpdates.Where(x => x.CustomerId == customer.Id).Last()?.UpdateTime ?? DateTime.MinValue) != (PlacesUpdates.Where(x => x.CustomerId == customer.Id).Last()?.UpdateTime ?? DateTime.MinValue))
+                              if((newPlacesUpdates.Where(x => x.CustomerId == customer.Id).Last()?.UpdateTime ?? DateTime.MinValue) 
+                              != (PlacesUpdates.Where(x => x.CustomerId == customer.Id).Last()?.UpdateTime ?? DateTime.MinValue))
                               {
                                   MessageBox.Show("Someone has just updated place! Update cancelled.");
                                   return;
                               }
-                              //else if(SelectedPlace.Street != TextBoxStreet || SelectedPlace.City != SelectedCity.Name)
-                              //{
-                              //    // Adding new Place
-                              //    Place place = new Place(Places.Last().Id+1, SelectedCity.ToCity(), TextBoxStreet);
-                              //    RestRequest requestPlace = new RestRequest("api/placeUpdate/", Method.POST);
-                              //    requestPlace.RequestFormat = DataFormat.Json;
-                              //    requestPlace.AddJsonBody(place);
-                              //    var asyncHandler2 = _restClient.ExecuteAsync(requestPlace, r =>
-                              //    {
-                              //        if (r.ResponseStatus == ResponseStatus.Completed)
-                              //        {
-                              //            MessageBox.Show("New place added"); //TODO: remove before release
+                              
 
-                              //        }
-                              //    });
-                              //    PlaceVM placeVM = new PlaceVM(place);
-                              //    Places.Add(placeVM);
-                              //    SelectedPlace = placeVM;
-                              //}
-
-
+                              // updating customer
                               CustomerVM newcustomer = new CustomerVM(new Customer(customer.Id, TextBoxName, TextBoxFirstName, SelectedDate, SelectedPlace.Place));
                               RestRequest requestUpdate = new RestRequest("api/customer/" + customer.Id.ToString(), Method.PUT);
                               requestUpdate.AddJsonBody(newcustomer.Customer);
@@ -317,6 +298,8 @@ namespace RecruitmentTest
                               SelectedCustomer = newcustomer;
                               _restClient.Execute(requestUpdate);
 
+                              // adding new placeUpdate
+                              // TODO: checking if place changed?
                               PlaceUpdate placeUpdate = new PlaceUpdate(0, DateTime.Now, newcustomer.Id, newcustomer.Customer.Place.Id);
                               RestRequest requestPlaceUpdate = new RestRequest("api/placeUpdate/", Method.POST);
                               requestPlaceUpdate.RequestFormat = DataFormat.Json;
@@ -330,7 +313,6 @@ namespace RecruitmentTest
                                   }
                               });
                               PlacesUpdates = newPlacesUpdates;
-                              //_restClient.Execute(requestPlaceUpdate);
                           }
                           catch (Exception ex)
                           {
@@ -419,6 +401,7 @@ namespace RecruitmentTest
             Customers.Clear();
             Cities.Clear();
             Places.Clear();
+            PlacesUpdates.Clear();
 
 
             var requestCustomers = new RestRequest("api/customer", Method.GET);
