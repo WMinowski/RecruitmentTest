@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Domain;
+using DomainStandard;
 using Infrastructure;
 
 namespace RecruitmentTestAPI.Controllers
@@ -13,37 +13,42 @@ namespace RecruitmentTestAPI.Controllers
     [ApiController]
     public class CityController : ControllerBase
     {
-        private readonly CustomerService _customerService;
+        private readonly CityService _cityService;
 
-        public CityController(CustomerService customerService)
+        public CityController(CityService cityService)
         {
-            _customerService = customerService;
+            _cityService = cityService;
         }
 
         [HttpGet]
         public ActionResult<List<City>> Get()
         {
-            var temp = _customerService.GetCities();
+            var temp = new List<City>();
+             foreach(IDBEntity e in _cityService.Get())
+            {
+                temp.Add(e as City);
+            }
+
             return temp;
         }
 
         [HttpGet("{id}", Name = "GetCity")]
         public ActionResult<City> Get(string id)
         {
-            var city = _customerService.GetCity(int.Parse(id));
+            var city = _cityService.Get(int.Parse(id));
 
             if (city == null)
             {
                 return NotFound();
             }
 
-            return city;
+            return city as City;
         }
 
         [HttpPost]
         public ActionResult<City> Create(City city)
         {
-            _customerService.CreateCity(city);
+            _cityService.Create(city);
 
             return CreatedAtRoute("GetCity", new { id = city.Id.ToString() }, city);
         }
@@ -51,14 +56,14 @@ namespace RecruitmentTestAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(string id, City cityIn)
         {
-            var city = _customerService.GetCity(int.Parse(id));
+            var city = _cityService.Get(int.Parse(id));
 
             if (city == null)
             {
                 return NotFound();
             }
 
-            _customerService.UpdateCity(int.Parse(id), cityIn);
+            _cityService.Update(int.Parse(id), cityIn);
 
             return NoContent();
         }
@@ -66,14 +71,14 @@ namespace RecruitmentTestAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            var city = _customerService.GetCity(int.Parse(id));
+            var city = _cityService.Get(int.Parse(id));
 
             if (city == null)
             {
                 return NotFound();
             }
 
-            _customerService.RemoveCity(city.Id);
+            _cityService.Remove(city.Id);
 
             return NoContent();
         }

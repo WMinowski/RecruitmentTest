@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Domain;
+using DomainStandard;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +19,11 @@ namespace RecruitmentTestAPI.Controllers
         [HttpGet]
         public ActionResult<List<Customer>> Get()
         {
-            var temp = _customerService.Get();
+            var temp = new List<Customer>();
+            foreach(IDBEntity e in _customerService.Get())
+            {
+                temp.Add(e as Customer);
+            }
             return temp;
         }
 
@@ -33,7 +37,7 @@ namespace RecruitmentTestAPI.Controllers
                 return NotFound();
             }
 
-            return customer;
+            return customer as Customer;
         }
 
         [HttpPost]

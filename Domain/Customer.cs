@@ -4,27 +4,25 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace Domain
+namespace DomainStandard
 {
-    public class Customer
+    public class Customer : IDBEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string FirstName { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public string Street { get; set; }
-        public City City { get; set; }
+        public Place Place { get; set; }
 
         public Customer() { }
 
-        public Customer(int id, string name, string firstName, DateTime dateOfBirth, string street, City city)
+        public Customer(int id, string name, string firstName, DateTime dateOfBirth, Place place)
         {
             Id = id;
             Name = name;
             FirstName = firstName;
             DateOfBirth = dateOfBirth;
-            Street = street;
-            City = city;
+            Place = place;
         }
     }
 

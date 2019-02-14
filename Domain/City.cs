@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain
+namespace DomainStandard
 {
-    public class City
+    public class City : IDBEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

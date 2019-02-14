@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using RestSharp;
 using DataFormat = RestSharp.DataFormat;
-using Domain;
+using DomainStandard;
 
 namespace RecruitmentTest
 {
@@ -17,9 +17,13 @@ namespace RecruitmentTest
     {
         private RestClient _restClient = new RestClient("http://localhost:5000");
         IErrorChecker _checker;
-        private CustomerVM _selectedCustomer;
+        
         public ObservableCollection<CustomerVM> Customers { get; } = new ObservableCollection<CustomerVM>();
         public ObservableCollection<CityVM> Cities { get; } = new ObservableCollection<CityVM>();
+        public ObservableCollection<PlaceVM> Places { get; } = new ObservableCollection<PlaceVM>();
+        public List<PlaceUpdate> PlacesUpdates { get; } = new List<PlaceUpdate>();
+
+        private CustomerVM _selectedCustomer;
         public CustomerVM SelectedCustomer
         {
             get {
@@ -37,9 +41,8 @@ namespace RecruitmentTest
                     TextBoxName = _selectedCustomer.Name;
                     TextBoxFirstName = _selectedCustomer.FirstName;
                     SelectedDate = _selectedCustomer.DateOfBirth;
-                    TextBoxStreet = _selectedCustomer.Street;
-                    
-                    SelectedCity = Cities.First<CityVM>(x => x.Name == _selectedCustomer.City);
+                    SelectedPlace = Places.First<PlaceVM>(x => x.ToString() == _selectedCustomer.Place);
+                    //SelectedCity = Cities.First<CityVM>(x => x.Name == _selectedCustomer.Customer.Place.City.Name);
                 }
             }
         }
@@ -53,6 +56,22 @@ namespace RecruitmentTest
                 OnPropertyChanged("SelectedCity");
             }
         }
+        private PlaceVM _selectedPlace;
+        public PlaceVM SelectedPlace
+        {
+            get { return _selectedPlace; }
+            set
+            {
+                _selectedPlace = value;
+                OnPropertyChanged("SelectedPlace");
+                if(_selectedPlace != null)
+                {
+                    TextBoxStreet = _selectedPlace.Street;
+                    SelectedCity = Cities.First<CityVM>(x => x.Name == _selectedPlace.City);
+                }
+            }
+        }
+
         private string _textBoxName;
         public string TextBoxName
         {
@@ -110,7 +129,7 @@ namespace RecruitmentTest
                       try
                       {
 
-                          CustomerVM customer = new CustomerVM(new Customer(0, TextBoxName, TextBoxFirstName, SelectedDate, TextBoxStreet, SelectedCity.ToCity()));
+                          CustomerVM customer = new CustomerVM(new Customer(0, TextBoxName, TextBoxFirstName, SelectedDate, SelectedPlace.Place));
                           Customers.Insert(0, customer);
                           SelectedCustomer = customer;
 
@@ -142,8 +161,7 @@ namespace RecruitmentTest
                 || SelectedCustomer.Name != TextBoxName // if one of selected customer fields != proper textbox entry - return true
                 || SelectedCustomer.FirstName != TextBoxFirstName
                 || SelectedCustomer.DateOfBirth != SelectedDate
-                || SelectedCustomer.Street != TextBoxStreet
-                || SelectedCustomer.City != SelectedCity.Name);
+                || SelectedCustomer.Place != SelectedPlace.ToString());
             // if all fields coincide with textbox entries - return false
         }
 
@@ -212,7 +230,7 @@ namespace RecruitmentTest
                       {
                           try
                           {
-                              CustomerVM newcustomer = new CustomerVM(new Customer(0, TextBoxName, TextBoxFirstName, SelectedDate, TextBoxStreet, SelectedCity.ToCity()));
+                              CustomerVM newcustomer = new CustomerVM(new Customer(0, TextBoxName, TextBoxFirstName, SelectedDate, SelectedPlace.Place));
                               RestRequest request = new RestRequest("api/customer/" + customer.Id.ToString(), Method.PUT);
                               request.AddJsonBody(newcustomer.Customer);
                               request.RequestFormat = DataFormat.Json;
@@ -247,8 +265,8 @@ namespace RecruitmentTest
                       textFields.Add("Name", TextBoxName);
                       textFields.Add("FirstName", TextBoxFirstName);
                       textFields.Add("DateOfBirth", SelectedDate.ToString("yyyy-MM-dd"));
-                      textFields.Add("Street", TextBoxStreet);
-                      textFields.Add("CityId", SelectedCity.Id.ToString());
+                      textFields.Add("Place", SelectedPlace?.ToString()??string.Empty);
+                      
                       
                       //UI only Filter by LINQ
                       ObservableCollection<CustomerVM> filtered = new ObservableCollection<CustomerVM>(Customers);
@@ -262,8 +280,7 @@ namespace RecruitmentTest
                       if (fields[0].Value != string.Empty) { filteredList = filteredList.Where(x => x.Name == TextBoxName).ToList(); }
                       if (fields[1].Value != string.Empty) { filteredList = filteredList.Where(x => x.FirstName == TextBoxFirstName).ToList(); }
                       if (fields[2].Value != string.Empty) { filteredList = filteredList.Where(x => x.DateOfBirth == SelectedDate).ToList(); }
-                      if (fields[3].Value != string.Empty) { filteredList = filteredList.Where(x => x.Street == TextBoxStreet).ToList(); }
-                      if (fields[4].Value != string.Empty) { filteredList = filteredList.Where(x => x.City == SelectedCity.Name).ToList(); }
+                      if (fields[3].Value != string.Empty) { filteredList = filteredList.Where(x => x.Place == SelectedPlace.ToString()).ToList(); }
                       Customers.Clear();
                       foreach (CustomerVM c in filteredList)
                       {
@@ -301,6 +318,7 @@ namespace RecruitmentTest
             SelectedDate = DateTime.Now;
             TextBoxStreet = String.Empty;
             SelectedCity = null;
+            SelectedPlace = null;
         }
 
         public void LoadDatabase()
@@ -308,29 +326,48 @@ namespace RecruitmentTest
 
             Customers.Clear();
             Cities.Clear();
+            Places.Clear();
 
 
-            var request = new RestRequest("api/customer", Method.GET);
-            var queryResult = _restClient.Execute<List<Customer>>(request).Data;
-            if (queryResult != null)
+            var requestCustomers = new RestRequest("api/customer", Method.GET);
+            var queryResultCustomers = _restClient.Execute<List<Customer>>(requestCustomers).Data;
+            if (queryResultCustomers != null)
             {
-                foreach (Customer c in queryResult)
+                foreach (Customer c in queryResultCustomers)
                 {
                     Customers.Add(new CustomerVM(c));
                 }
             }
 
-            var request2 = new RestRequest("api/city", Method.GET);
-            var queryResult2 = _restClient.Execute<List<City>>(request2).Data;
-            if (queryResult2 != null)
+            var requestCities = new RestRequest("api/city", Method.GET);
+            var queryResultCities = _restClient.Execute<List<City>>(requestCities).Data;
+            if (queryResultCities != null)
             {
-                foreach(City c in queryResult2)
+                foreach(City c in queryResultCities)
                 {
                     Cities.Add(new CityVM(c));
                 }
             }
 
-            
+            var requestPlaces = new RestRequest("api/place", Method.GET);
+            var queryResultPlaces = _restClient.Execute<List<Place>>(requestCities).Data;
+            if (queryResultPlaces != null)
+            {
+                foreach (Place p in queryResultPlaces)
+                {
+                    Places.Add(new PlaceVM(p));
+                }
+            }
+            var requestPlacesUpdates = new RestRequest("api/placeUpdate", Method.GET);
+            var queryResultPlacesUpdates = _restClient.Execute<List<PlaceUpdate>>(requestCities).Data;
+            if (queryResultPlacesUpdates != null)
+            {
+                foreach (PlaceUpdate p in queryResultPlacesUpdates)
+                {
+                    PlacesUpdates.Add(p);
+                }
+            }
+
             ClearText();
         }
 

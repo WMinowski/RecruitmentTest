@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RecruitmentTest"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="609" Width="800">
     <Window.Resources>
         <local:CustomerVM x:Key="data"/>
 
@@ -50,39 +50,39 @@
             <ColumnDefinition Width="496*"/>
             <ColumnDefinition Width="297*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="dataGrid1" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="399" Margin="10,10,0,0" VerticalAlignment="Top" Width="537" SelectedItem="{Binding SelectedCustomer}" Grid.ColumnSpan="2" ItemsSource="{Binding Customers}">
+        <DataGrid x:Name="dataGrid1" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="558" Margin="10,10,0,0" VerticalAlignment="Top" Width="537" SelectedItem="{Binding SelectedCustomer}" Grid.ColumnSpan="2" ItemsSource="{Binding Customers}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
                 <DataGridTextColumn Binding="{Binding FirstName}" Header="First name"/>
                 <DataGridTextColumn Binding="{Binding DateOfBirth}" Header="Date of birth"/>
                 <DataGridTextColumn Binding="{Binding Street}" Header="Street"/>
-                <DataGridTextColumn Binding="{Binding City}" Header="City"/>
+                <DataGridTextColumn Binding="{Binding Place}" Header="Place"/>
             </DataGrid.Columns>
         </DataGrid>
         <Label Content="Name" HorizontalAlignment="Left" Margin="57,12,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="20" Grid.Column="1"/>
         <Label Content="First Name" HorizontalAlignment="Left" Margin="57,54,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18" Grid.Column="1"/>
         <Label Content="Date of Birth" HorizontalAlignment="Left" Margin="57,94,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18" Grid.Column="1"/>
-        <Label Content="Street" HorizontalAlignment="Left" Margin="57,136,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18" Grid.Column="1"/>
-        <Label Content="City" HorizontalAlignment="Left" Margin="57,176,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18" Grid.Column="1"/>
+        <Label Content="Street" HorizontalAlignment="Left" Margin="57,374,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18" Grid.Column="1"/>
+        <Label Content="City" HorizontalAlignment="Left" Margin="57,415,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18" Grid.Column="1"/>
         <TextBox x:Name="textBoxName" Style="{StaticResource textBoxInError}" HorizontalAlignment="Left" Height="36" Margin="169,12,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" Grid.Column="1">
             <TextBox.Text>
-            <Binding Path= "TextBoxName" UpdateSourceTrigger="PropertyChanged" Mode = "TwoWay" ValidatesOnExceptions="True">
+                <Binding Path= "TextBoxName" UpdateSourceTrigger="PropertyChanged" Mode = "TwoWay" ValidatesOnExceptions="True">
                     <Binding.ValidationRules>
                         <local:NoEmptyRule/>
                     </Binding.ValidationRules>
                 </Binding>
-        </TextBox.Text>
+            </TextBox.Text>
         </TextBox>
         <TextBox x:Name="textBoxFirstName" Style="{StaticResource textBoxInError}" HorizontalAlignment="Left" Height="36" Margin="169,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" Grid.Column="1">
-        <TextBox.Text>
-            <Binding Path= "TextBoxFirstName" UpdateSourceTrigger="PropertyChanged" Mode = "TwoWay" ValidatesOnExceptions="True">
+            <TextBox.Text>
+                <Binding Path= "TextBoxFirstName" UpdateSourceTrigger="PropertyChanged" Mode = "TwoWay" ValidatesOnExceptions="True">
                     <Binding.ValidationRules>
                         <local:NoEmptyRule/>
                     </Binding.ValidationRules>
                 </Binding>
-        </TextBox.Text>
+            </TextBox.Text>
         </TextBox>
-        <TextBox x:Name="textBoxStreet" Style="{StaticResource textBoxInError}"  HorizontalAlignment="Left" Height="36" Margin="169,136,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" Grid.Column="1">
+        <TextBox x:Name="textBoxStreet" Style="{StaticResource textBoxInError}"  HorizontalAlignment="Left" Height="36" Margin="174,374,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="112" Grid.Column="1">
             <TextBox.Text>
                 <Binding Path= "TextBoxStreet" UpdateSourceTrigger="PropertyChanged" Mode = "TwoWay" ValidatesOnExceptions="True">
                     <Binding.ValidationRules>
@@ -91,16 +91,17 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
-        <Button Content="Add"  HorizontalAlignment="Left" Margin="57,218,0,0" VerticalAlignment="Top" Width="112" Height="32"  Command="{Binding AddCommand }" Grid.Column="1"/>
-        <Button Content="Remove" HorizontalAlignment="Left" Margin="173,218,0,0" VerticalAlignment="Top" Width="114" Height="32" Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
-        <Button Content="Update" HorizontalAlignment="Left" Margin="57,256,0,0" VerticalAlignment="Top" Width="112" Height="34" Command="{Binding UpdCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
-        <Button Content="Search" HorizontalAlignment="Left" Margin="173,256,0,0" VerticalAlignment="Top" Width="114" Height="34" Command="{Binding SearchCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
-        <ComboBox x:Name="comboBoxCity" Grid.Column="1" HorizontalAlignment="Left" Margin="169,176,0,0" VerticalAlignment="Top" Width="118" Height="36" ItemsSource="{ Binding Path = Cities }" SelectedItem="{Binding Path=SelectedCity}" DisplayMemberPath="Name" />
+        <Button Content="Add"  HorizontalAlignment="Left" Margin="57,456,0,0" VerticalAlignment="Top" Width="112" Height="32"  Command="{Binding AddCommand }" Grid.Column="1"/>
+        <Button Content="Remove" HorizontalAlignment="Left" Margin="173,456,0,0" VerticalAlignment="Top" Width="114" Height="32" Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
+        <Button Content="Update" HorizontalAlignment="Left" Margin="57,494,0,0" VerticalAlignment="Top" Width="112" Height="34" Command="{Binding UpdCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
+        <Button Content="Search" HorizontalAlignment="Left" Margin="173,494,0,0" VerticalAlignment="Top" Width="114" Height="34" Command="{Binding SearchCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
+        <ComboBox x:Name="comboBoxCity" HorizontalAlignment="Left" Margin="174,414,0,0" VerticalAlignment="Top" Width="113" Height="36" ItemsSource="{ Binding Path = Cities }" SelectedItem="{Binding Path=SelectedCity}" DisplayMemberPath="Name" Grid.Column="1" />
         <DatePicker x:Name="datePicker" SelectedDate="{Binding Path=SelectedDate}" Grid.Column="1" HorizontalAlignment="Left" Margin="169,94,0,0" VerticalAlignment="Top"  Height="36" Width="118"/>
-        <Button Content="Load DataBase" HorizontalAlignment="Left" Margin="57,296,0,0" VerticalAlignment="Top" Width="230" Height="34" Command="{Binding LoadCommand}" Grid.Column="1"/>
+        <Button Content="Load DataBase" HorizontalAlignment="Left" Margin="57,534,0,0" VerticalAlignment="Top" Width="230" Height="34" Command="{Binding LoadCommand}" Grid.Column="1"/>
+        <ListBox Grid.Column="1" ItemsSource="{ Binding Path = Places }" SelectedItem="{Binding Path=SelectedPlace}" HorizontalAlignment="Left" Height="234" Margin="57,135,0,0" VerticalAlignment="Top" Width="229"/>
 
     </Grid>
-    
+
 </Window>
     
 

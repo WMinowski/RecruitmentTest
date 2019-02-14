@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Domain;
+using DomainStandard;
 
 namespace RecruitmentTest
 {
@@ -51,21 +51,27 @@ namespace RecruitmentTest
                 OnPropertyChanged("DateOfBirth");
             }
         }
-        public string Street
+        public string Place
         {
-            get { return _customer.Street; }
-            set
-            {
-                _customer.Street = value;
-                OnPropertyChanged("Street");
-            }
+            get { return _customer.Place.City.Name + ", " + _customer.Place.Street; }
+            // no set
         }
-        public string City
-        {
-            get { return _customer.City.Name; }
 
-            //no set for non-modified City collection
-        }
+        //public string Street
+        //{
+        //    get { return _customer.Street; }
+        //    set
+        //    {
+        //        _customer.Street = value;
+        //        OnPropertyChanged("Street");
+        //    }
+        //}
+        //public string City
+        //{
+        //    get { return _customer.City.Name; }
+
+        //    //no set for non-modified City collection
+        //}
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
@@ -85,7 +91,7 @@ namespace RecruitmentTest
             Name = _customer.Name;
             FirstName = _customer.FirstName;
             DateOfBirth = _customer.DateOfBirth;
-            Street = _customer.Street;
+            
 
         }
 

@@ -61,6 +61,7 @@
     </ApplicationDefinition>
     <Compile Include="IErrorChecker.cs" />
     <Compile Include="NoEmptyRule.cs" />
+    <Compile Include="PlaceVM.cs" />
     <Compile Include="RelayCommand.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -32,15 +32,15 @@ namespace RecruitmentTest
             Id = id;
             Name = name;
         }
-        public CityVM(Domain.City city)
+        public CityVM(DomainStandard.City city)
         {
             Id = city.Id;
             Name = city.Name;
         }
 
-        public Domain.City ToCity()
+        public DomainStandard.City ToCity()
         {
-            return new Domain.City(Id, Name);
+            return new DomainStandard.City(Id, Name);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
