@@ -67,7 +67,7 @@ namespace Infrastructure
             {
                 StaticService.adapter.InsertCommand = new MySqlCommand(
                                       "INSERT INTO mydb.places " +
-                                      "VALUES(@Id,@City,@Street);",
+                                      "VALUES(@Id,@CityId,@Street);",
                                       connection);
                 StaticService.adapter.InsertCommand.Parameters.Add("@Id", MySqlDbType.Int32).Value = place.Id;
                 StaticService.adapter.InsertCommand.Parameters.Add("@CityId", MySqlDbType.Int32).Value = place.City.Id;

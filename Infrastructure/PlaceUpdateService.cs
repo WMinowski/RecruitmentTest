@@ -46,7 +46,7 @@ namespace Infrastructure
             using (MySqlConnection connection = StaticService.GetConnection())
             {
                 string query =
-                            @"UPDATE placesUpdates SET Id =" + placeUpdateIn.Id + " ,UpdateDate = '" + placeUpdateIn.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss") + "' ,CustomerId = " + placeUpdateIn.CustomerId + " ,PlaceId = " + placeUpdateIn.PlaceId +
+                            @"UPDATE placesUpdates SET Id =" + placeUpdateIn.Id + " ,UpdateTime = '" + placeUpdateIn.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss") + "' ,CustomerId = " + placeUpdateIn.CustomerId + " ,PlaceId = " + placeUpdateIn.PlaceId +
                             @" WHERE (" +
                             @"Id = " + placeUpdateIn.Id + @")";
 
@@ -68,10 +68,10 @@ namespace Infrastructure
             {
                 StaticService.adapter.InsertCommand = new MySqlCommand(
                                       "INSERT INTO mydb.placesUpdates " +
-                                      "VALUES(@Id,@City);",
+                                      "VALUES(@Id,@UpdateTime,@CustomerId,@PlaceId);",
                                       connection);
                 StaticService.adapter.InsertCommand.Parameters.Add("@Id", MySqlDbType.Int32).Value = placeUpdate.Id;
-                StaticService.adapter.InsertCommand.Parameters.Add("@City", MySqlDbType.DateTime).Value = placeUpdate.UpdateTime; // no ToString("FormatString")
+                StaticService.adapter.InsertCommand.Parameters.Add("@UpdateTime", MySqlDbType.Timestamp).Value = placeUpdate.UpdateTime; // no ToString("FormatString")
                 StaticService.adapter.InsertCommand.Parameters.Add("@CustomerId", MySqlDbType.Int32).Value = placeUpdate.CustomerId;
                 StaticService.adapter.InsertCommand.Parameters.Add("@PlaceId", MySqlDbType.Int32).Value = placeUpdate.PlaceId;
 

@@ -15,10 +15,6 @@ namespace Infrastructure
         public static string ConnectionString { get; set; }
         public static MySqlDataAdapter adapter = new MySqlDataAdapter();
 
-        //static StaticService()
-        //{
-            
-        //}
         public static MySqlConnection GetConnection()
         {
             return new MySqlConnection(ConnectionString);
@@ -52,6 +48,7 @@ namespace Infrastructure
                 {
                     while (reader.Read())
                     {
+                        var cities = _cities;
                         _places.Add(new Place()
                         {
                             Id = Convert.ToInt32(reader["Id"]),
@@ -65,7 +62,7 @@ namespace Infrastructure
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.customers", conn); /////// "select customers.Id customers.Name, customers.FirstName, customers.DateOfBirth, customers.Street, cities.City from customers left join cities on customers.CityId=cities.Id"
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.customers", conn); 
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -78,14 +75,34 @@ namespace Infrastructure
                             FirstName = reader["FirstName"].ToString(),
                             DateOfBirth = Convert.ToDateTime(reader["DateOfBirth"]),
                             Place = _places.Find(x => x.Id == Convert.ToInt32(reader["PlaceId"]))
-                            //Convert.ToInt32(reader["CityId"])
                         });
 
                     }
                 }
 
             }
-            //TODO: placeUpdate read
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.placesUpdates", conn); 
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+
+                        _placeUpdates.Add(new PlaceUpdate()
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            UpdateTime = Convert.ToDateTime(reader["UpdateTime"]),
+                            CustomerId = Convert.ToInt32(reader["CustomerId"]),
+                            PlaceId = Convert.ToInt32(reader["PlaceId"])
+                            
+                        });
+
+                    }
+                }
+
+            }
         }
     }
 }

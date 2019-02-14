@@ -55,7 +55,6 @@
                 <DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
                 <DataGridTextColumn Binding="{Binding FirstName}" Header="First name"/>
                 <DataGridTextColumn Binding="{Binding DateOfBirth}" Header="Date of birth"/>
-                <DataGridTextColumn Binding="{Binding Street}" Header="Street"/>
                 <DataGridTextColumn Binding="{Binding Place}" Header="Place"/>
             </DataGrid.Columns>
         </DataGrid>
@@ -98,7 +97,8 @@
         <ComboBox x:Name="comboBoxCity" HorizontalAlignment="Left" Margin="174,414,0,0" VerticalAlignment="Top" Width="113" Height="36" ItemsSource="{ Binding Path = Cities }" SelectedItem="{Binding Path=SelectedCity}" DisplayMemberPath="Name" Grid.Column="1" />
         <DatePicker x:Name="datePicker" SelectedDate="{Binding Path=SelectedDate}" Grid.Column="1" HorizontalAlignment="Left" Margin="169,94,0,0" VerticalAlignment="Top"  Height="36" Width="118"/>
         <Button Content="Load DataBase" HorizontalAlignment="Left" Margin="57,534,0,0" VerticalAlignment="Top" Width="230" Height="34" Command="{Binding LoadCommand}" Grid.Column="1"/>
-        <ListBox Grid.Column="1" ItemsSource="{ Binding Path = Places }" SelectedItem="{Binding Path=SelectedPlace}" HorizontalAlignment="Left" Height="234" Margin="57,135,0,0" VerticalAlignment="Top" Width="229"/>
+        <ListBox Grid.Column="1" ItemsSource="{ Binding Path = Places }" SelectedItem="{Binding Path=SelectedPlace}" HorizontalAlignment="Left" Height="197" Margin="57,135,0,0" VerticalAlignment="Top" Width="229"/>
+        <Button Content="Add Place"  HorizontalAlignment="Left" Margin="57,337,0,0" VerticalAlignment="Top" Width="112" Height="32"  Command="{Binding AddPlaceCommand}" Grid.Column="1"/>
 
     </Grid>
 

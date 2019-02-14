@@ -57,22 +57,6 @@ namespace RecruitmentTest
             // no set
         }
 
-        //public string Street
-        //{
-        //    get { return _customer.Street; }
-        //    set
-        //    {
-        //        _customer.Street = value;
-        //        OnPropertyChanged("Street");
-        //    }
-        //}
-        //public string City
-        //{
-        //    get { return _customer.City.Name; }
-
-        //    //no set for non-modified City collection
-        //}
-
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
