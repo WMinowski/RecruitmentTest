@@ -19,10 +19,6 @@ namespace RecruitmentTest
         {
             return (Validation.GetHasError(textBoxName) || Validation.GetHasError(textBoxFirstName));
         }
-        public bool HasPlaceValidationErrors()
-        {
-            return Validation.GetHasError(textBoxStreet);
-        }
     }
 
     

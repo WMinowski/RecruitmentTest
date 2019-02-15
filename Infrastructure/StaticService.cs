@@ -7,10 +7,10 @@ namespace Infrastructure
 {
     public static class StaticService
     {
-        public static List<Customer> _customers = new List<Customer>();
-        public static List<City> _cities = new List<City>();
-        public static List<Place> _places = new List<Place>();
-        public static List<PlaceUpdate> _placeUpdates = new List<PlaceUpdate>();
+        public static List<Customer> customers = new List<Customer>();
+        public static List<City> cities = new List<City>();
+        public static List<Place> places = new List<Place>();
+        public static List<CustomerPlace> customersPlaces = new List<CustomerPlace>();
         public static string ConnectionString { get; set; }
         public static MySqlDataAdapter adapter = new MySqlDataAdapter();
 
@@ -30,7 +30,7 @@ namespace Infrastructure
                 {
                     while (reader.Read())
                     {
-                        _cities.Add(new City()
+                        cities.Add(new City()
                         {
                             Id = Convert.ToInt32(reader["Id"]),
                             Name = reader["City"].ToString()
@@ -47,11 +47,11 @@ namespace Infrastructure
                 {
                     while (reader.Read())
                     {
-                        var cities = _cities;
-                        _places.Add(new Place()
+                        var cities = StaticService.cities;
+                        places.Add(new Place()
                         {
                             Id = Convert.ToInt32(reader["Id"]),
-                            City = _cities.Find(x => x.Id == Convert.ToInt32(reader["CityId"])),
+                            City = StaticService.cities.Find(x => x.Id == Convert.ToInt32(reader["CityId"])),
                             Street = reader["Street"].ToString()
                         });
                     }
@@ -67,13 +67,13 @@ namespace Infrastructure
                     while (reader.Read())
                     {
 
-                        _customers.Add(new Customer()
+                        customers.Add(new Customer()
                         {
                             Id = Convert.ToInt32(reader["Id"]),
                             Name = reader["Name"].ToString(),
                             FirstName = reader["FirstName"].ToString(),
                             DateOfBirth = Convert.ToDateTime(reader["DateOfBirth"]),
-                            Place = _places.Find(x => x.Id == Convert.ToInt32(reader["PlaceId"]))
+                            Place = places.Find(x => x.Id == Convert.ToInt32(reader["PlaceId"]))
                         });
 
                     }
@@ -83,13 +83,13 @@ namespace Infrastructure
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.placesUpdates", conn); 
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.customersPlaces", conn); 
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
 
-                        _placeUpdates.Add(new PlaceUpdate()
+                        customersPlaces.Add(new CustomerPlace()
                         {
                             Id = Convert.ToInt32(reader["Id"]),
                             UpdateTime = Convert.ToDateTime(reader["UpdateTime"]),

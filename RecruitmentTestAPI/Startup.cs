@@ -30,7 +30,7 @@ namespace TodoApi
             services.Add(new ServiceDescriptor(typeof(CustomerService), new CustomerService()));
             services.Add(new ServiceDescriptor(typeof(CityService), new CityService()));
             services.Add(new ServiceDescriptor(typeof(PlaceService), new PlaceService()));
-            services.Add(new ServiceDescriptor(typeof(PlaceUpdateService), new PlaceUpdateService()));
+            services.Add(new ServiceDescriptor(typeof(CustomerPlaceService), new CustomerPlaceService()));
             //
         }
 

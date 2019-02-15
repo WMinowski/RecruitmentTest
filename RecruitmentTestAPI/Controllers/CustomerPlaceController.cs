@@ -7,29 +7,29 @@ namespace RecruitmentTestAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlaceUpdateController : ControllerBase
+    public class CustomerPlaceController : ControllerBase
     {
-        private readonly PlaceUpdateService _placeUpdateService;
+        private readonly CustomerPlaceService _placeUpdateService;
 
-        public PlaceUpdateController(PlaceUpdateService placeUpdateService)
+        public CustomerPlaceController(CustomerPlaceService placeUpdateService)
         {
             _placeUpdateService = placeUpdateService;
         }
 
         [HttpGet]
-        public ActionResult<List<PlaceUpdate>> Get()
+        public ActionResult<List<CustomerPlace>> Get()
         {
-            var temp = new List<PlaceUpdate>();
+            var temp = new List<CustomerPlace>();
             foreach (IDBEntity e in _placeUpdateService.Get())
             {
-                temp.Add(e as PlaceUpdate);
+                temp.Add(e as CustomerPlace);
             }
 
             return temp;
         }
 
         [HttpGet("{id}", Name = "GetPlaceUpdate")]
-        public ActionResult<PlaceUpdate> Get(string id)
+        public ActionResult<CustomerPlace> Get(string id)
         {
             var placeUpdate = _placeUpdateService.Get(int.Parse(id));
 
@@ -38,11 +38,11 @@ namespace RecruitmentTestAPI.Controllers
                 return NotFound();
             }
 
-            return placeUpdate as PlaceUpdate;
+            return placeUpdate as CustomerPlace;
         }
 
         [HttpPost]
-        public ActionResult<Place> Create(PlaceUpdate placeUpdate)
+        public ActionResult<Place> Create(CustomerPlace placeUpdate)
         {
             _placeUpdateService.Create(placeUpdate);
 
@@ -50,7 +50,7 @@ namespace RecruitmentTestAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(string id, PlaceUpdate placeUpdateIn)
+        public IActionResult Update(string id, CustomerPlace placeUpdateIn)
         {
             var place = _placeUpdateService.Get(int.Parse(id));
 

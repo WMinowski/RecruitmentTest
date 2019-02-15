@@ -21,7 +21,7 @@ namespace Infrastructure
                 connection.Open();
                 StaticService.adapter.DeleteCommand.ExecuteNonQuery();
             }
-            StaticService._cities.Remove(StaticService._cities.Find(x => x.Id == id));
+            StaticService.cities.Remove(StaticService.cities.Find(x => x.Id == id));
         }
 
         public void Remove(IDBEntity entity)
@@ -35,7 +35,7 @@ namespace Infrastructure
                 StaticService.adapter.DeleteCommand.ExecuteNonQuery();
             }
             //
-            StaticService._cities.Remove(cityIn);
+            StaticService.cities.Remove(cityIn);
         }
 
         public void Update(int id, IDBEntity entity)
@@ -55,8 +55,8 @@ namespace Infrastructure
                 localAadapter.UpdateCommand.ExecuteNonQuery();
             }
             //
-            StaticService._cities.Remove(StaticService._cities.Find(city => city.Id == id));
-            StaticService._cities.Add(cityIn);
+            StaticService.cities.Remove(StaticService.cities.Find(city => city.Id == id));
+            StaticService.cities.Add(cityIn);
         }
 
         public IDBEntity Create(IDBEntity entity)
@@ -75,18 +75,18 @@ namespace Infrastructure
                 connection.Open();
                 StaticService.adapter.InsertCommand.ExecuteNonQuery();
             }
-            StaticService._cities.Add(city);
+            StaticService.cities.Add(city);
             return city;
         }
 
         public IDBEntity Get(int id)
         {
-            return StaticService._cities.Find(city => city.Id == id);
+            return StaticService.cities.Find(city => city.Id == id);
         }
 
         public List<IDBEntity> Get()
         {
-            return new List<IDBEntity>(StaticService._cities.FindAll(city => true));
+            return new List<IDBEntity>(StaticService.cities.FindAll(city => true));
         }
     }
 }

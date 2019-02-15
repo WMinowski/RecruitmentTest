@@ -16,12 +16,12 @@ namespace Infrastructure
 
         public List<IDBEntity> Get()
         {
-            return new List<IDBEntity>(StaticService._customers.FindAll(customer => true));
+            return new List<IDBEntity>(StaticService.customers.FindAll(customer => true));
         }
 
         public IDBEntity Get(int id)
         {
-            return StaticService._customers.Find(customer => customer.Id == id);
+            return StaticService.customers.Find(customer => customer.Id == id);
         }
 
         public IDBEntity Create(IDBEntity entity)
@@ -44,7 +44,7 @@ namespace Infrastructure
                 connection.Open();
                 StaticService.adapter.InsertCommand.ExecuteNonQuery();
             }
-            StaticService._customers.Add(customer);
+            StaticService.customers.Add(customer);
             return customer;
         }
 
@@ -68,8 +68,8 @@ namespace Infrastructure
                 localAadapter.UpdateCommand.ExecuteNonQuery();
             }
             //
-            StaticService._customers.Remove(StaticService._customers.Find(customer => customer.Id==id));
-            StaticService._customers.Add(customerIn);
+            StaticService.customers.Remove(StaticService.customers.Find(customer => customer.Id==id));
+            StaticService.customers.Add(customerIn);
         }
 
         public void Remove(IDBEntity entity)
@@ -84,7 +84,7 @@ namespace Infrastructure
                 StaticService.adapter.DeleteCommand.ExecuteNonQuery();
             }
             //
-            StaticService._customers.Remove(customerIn);
+            StaticService.customers.Remove(customerIn);
         }
 
         public void Remove(int id)
@@ -96,7 +96,7 @@ namespace Infrastructure
                 connection.Open();
                 StaticService.adapter.DeleteCommand.ExecuteNonQuery();
             }
-            StaticService._customers.Remove(StaticService._customers.Find(x=>x.Id==id));
+            StaticService.customers.Remove(StaticService.customers.Find(x=>x.Id==id));
         }
     }
 }

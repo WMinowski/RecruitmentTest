@@ -1,0 +1,41 @@
+﻿<Window x:Class="RecruitmentTest.Places"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RecruitmentTest"
+        mc:Ignorable="d"
+        Title="Places" Height="261.851" Width="483.106">
+    <Window.Resources>
+        <!--The tool tip for the TextBox to display the validation error message.-->
+        <Style x:Key="textBoxInError" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                        Value="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={x:Static RelativeSource.Self}}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </Window.Resources>
+    <Grid Margin="0,0,-8,-8">
+        <DataGrid ItemsSource="{Binding Places}" SelectedItem="{Binding SelectedPlace}" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="196" Margin="10,10,0,0" VerticalAlignment="Top" Width="323">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Street}" Header="Street"/>
+                <DataGridTextColumn Binding="{Binding City}" Header="City"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Label Content="Street" HorizontalAlignment="Left" Margin="338,10,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18"/>
+        <Label Content="City" HorizontalAlignment="Left" Margin="338,92,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18"/>
+        <TextBox x:Name="textBoxStreet" Style="{StaticResource textBoxInError}"  HorizontalAlignment="Left" Height="36" Margin="338,51,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="112">
+            <Binding Path= "TextBoxStreet" UpdateSourceTrigger="PropertyChanged" Mode = "TwoWay" ValidatesOnExceptions="True">
+                <Binding.ValidationRules>
+                    <local:NoEmptyRule/>
+                </Binding.ValidationRules>
+            </Binding>
+        </TextBox>
+        <ComboBox x:Name="comboBoxCity" HorizontalAlignment="Left" Margin="338,133,0,0" VerticalAlignment="Top" Width="112" Height="36" ItemsSource="{Binding Cities}" SelectedItem="{Binding SelectedCity}" DisplayMemberPath="Name" />
+        <Button Content="Add"  HorizontalAlignment="Left" Margin="338,174,0,0" VerticalAlignment="Top" Width="112" Height="32"  Command="{Binding AddCommand}"/>
+
+    </Grid>
+</Window>

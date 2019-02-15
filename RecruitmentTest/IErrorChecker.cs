@@ -9,6 +9,5 @@ namespace RecruitmentTest
     public interface IErrorChecker
     {
         bool HasValidationErrors();
-        bool HasPlaceValidationErrors();
     }
 }

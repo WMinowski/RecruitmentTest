@@ -21,7 +21,7 @@ namespace RecruitmentTest
         public ObservableCollection<CustomerVM> Customers { get; } = new ObservableCollection<CustomerVM>();
         public ObservableCollection<CityVM> Cities { get; } = new ObservableCollection<CityVM>();
         public ObservableCollection<PlaceVM> Places { get; } = new ObservableCollection<PlaceVM>();
-        public List<PlaceUpdate> PlacesUpdates { get; set; } = new List<PlaceUpdate>();
+        public List<CustomerPlace> CustomersPlaces { get; set; } = new List<CustomerPlace>();
         
 
         private CustomerVM _selectedCustomer;
@@ -42,19 +42,9 @@ namespace RecruitmentTest
                     TextBoxName = _selectedCustomer.Name;
                     TextBoxFirstName = _selectedCustomer.FirstName;
                     SelectedDate = _selectedCustomer.DateOfBirth;
+
                     SelectedPlace = Places.First<PlaceVM>(x => x.ToString() == _selectedCustomer.Place);
-                    //SelectedCity = Cities.First<CityVM>(x => x.Name == _selectedCustomer.Customer.Place.City.Name);
                 }
-            }
-        }
-        private CityVM _selectedCity;
-        public CityVM SelectedCity
-        {
-            get { return _selectedCity; }
-            set
-            {
-                _selectedCity = value;
-                OnPropertyChanged("SelectedCity");
             }
         }
         private PlaceVM _selectedPlace;
@@ -65,11 +55,6 @@ namespace RecruitmentTest
             {
                 _selectedPlace = value;
                 OnPropertyChanged("SelectedPlace");
-                if(_selectedPlace != null)
-                {
-                    TextBoxStreet = _selectedPlace.Street;
-                    SelectedCity = Cities.First<CityVM>(x => x.Name == _selectedPlace.City);
-                }
             }
         }
 
@@ -93,16 +78,6 @@ namespace RecruitmentTest
             {
                 _textBoxFirstName = value;
                 OnPropertyChanged("TextBoxFirstName");
-            }
-        }
-        private string _textBoxStreet;
-        public string TextBoxStreet
-        {
-            get { return _textBoxStreet; }
-            set
-            {
-                _textBoxStreet = value;
-                OnPropertyChanged("TextBoxStreet");
             }
         }
         private DateTime _selectedDate;
@@ -134,14 +109,27 @@ namespace RecruitmentTest
                           Customers.Insert(0, customer);
                           SelectedCustomer = customer;
 
-                          var request = new RestRequest("api/customer", Method.POST);
-                          request.RequestFormat = DataFormat.Json;
-                          request.AddJsonBody(customer.Customer);// Serialize Domain.Customer, not CustomerVM!!!
-                          var asyncHandler = _restClient.ExecuteAsync(request, r =>
+                          var requestCustomer = new RestRequest("api/customer", Method.POST);
+                          requestCustomer.RequestFormat = DataFormat.Json;
+                          requestCustomer.AddJsonBody(customer.Customer);// Serialize Domain.Customer, not CustomerVM!!!
+                          var asyncHandler = _restClient.ExecuteAsync(requestCustomer, r =>
                           {
                               if (r.ResponseStatus == ResponseStatus.Completed)
                               {
                                   MessageBox.Show("New customer added"); //TODO: remove before release
+
+                              }
+                          });
+
+                          CustomerPlace cp = new CustomerPlace(0, DateTime.Now, customer.Id, customer.Customer.Place.Id);
+                          var requestCustomersPlaces = new RestRequest("api/customerPlace", Method.POST);
+                          requestCustomersPlaces.RequestFormat = DataFormat.Json;
+                          requestCustomersPlaces.AddJsonBody(cp);// Serialize Domain.Customer, not CustomerVM!!!
+                          var asyncHandler2 = _restClient.ExecuteAsync(requestCustomer, r =>
+                          {
+                              if (r.ResponseStatus == ResponseStatus.Completed)
+                              {
+                                  MessageBox.Show("New customerPlace added"); //TODO: remove before release
 
                               }
                           });
@@ -166,42 +154,7 @@ namespace RecruitmentTest
             // if all fields coincide with textbox entries - return false
         }
 
-        private RelayCommand _addPlaceCommand;
-        public RelayCommand AddPlaceCommand
-        {
-            get
-            {
-                return _addPlaceCommand ??
-                  (_addPlaceCommand = new RelayCommand(obj =>
-                  {
-
-                      try
-                      {
-
-                          PlaceVM place = new PlaceVM(new Place(Places.Last().Id+1, SelectedCity.ToCity(), TextBoxStreet));
-                          Places.Insert(0, place);
-                          SelectedPlace = place;
-
-                          var request = new RestRequest("api/place", Method.POST);
-                          request.RequestFormat = DataFormat.Json;
-                          request.AddJsonBody(place.Place);
-                          var asyncHandler = _restClient.ExecuteAsync(request, r =>
-                          {
-                              if (r.ResponseStatus == ResponseStatus.Completed)
-                              {
-                                  MessageBox.Show("New place added"); //TODO: remove before release
-
-                              }
-                          });
-                      }
-                      catch (Exception ex)
-                      {
-                          MessageBox.Show(ex.Message);
-                      }
-                  }, (obj) => !_checker.HasPlaceValidationErrors() && (SelectedPlace == null || SelectedPlace.City!=SelectedCity.Name || SelectedPlace.Street != TextBoxStreet)
-                  ));
-            }
-        }
+        
 
         // delete command
         private RelayCommand _removeCommand;
@@ -269,18 +222,18 @@ namespace RecruitmentTest
                           try
                           {
                               //PlacesUpdates Check
-                              List<PlaceUpdate> newPlacesUpdates = new List<PlaceUpdate>();
-                              var requestPlacesUpdates = new RestRequest("api/placeUpdate", Method.GET);
-                              var queryResultPlacesUpdates = _restClient.Execute<List<PlaceUpdate>>(requestPlacesUpdates).Data;
+                              List<CustomerPlace> newPlacesUpdates = new List<CustomerPlace>();
+                              var requestPlacesUpdates = new RestRequest("api/customerPlace", Method.GET);
+                              var queryResultPlacesUpdates = _restClient.Execute<List<CustomerPlace>>(requestPlacesUpdates).Data;
                               if (queryResultPlacesUpdates != null)
                               {
-                                  foreach (PlaceUpdate p in queryResultPlacesUpdates)
+                                  foreach (CustomerPlace p in queryResultPlacesUpdates)
                                   {
                                       newPlacesUpdates.Add(p);
                                   }
                               }
                               if((newPlacesUpdates.Where(x => x.CustomerId == customer.Id).Last()?.UpdateTime ?? DateTime.MinValue) 
-                              != (PlacesUpdates.Where(x => x.CustomerId == customer.Id).Last()?.UpdateTime ?? DateTime.MinValue))
+                              != (CustomersPlaces.Where(x => x.CustomerId == customer.Id).Last()?.UpdateTime ?? DateTime.MinValue))
                               {
                                   MessageBox.Show("Someone has just updated place! Update cancelled.");
                                   return;
@@ -298,21 +251,20 @@ namespace RecruitmentTest
                               SelectedCustomer = newcustomer;
                               _restClient.Execute(requestUpdate);
 
-                              // adding new placeUpdate
-                              // TODO: checking if place changed?
-                              PlaceUpdate placeUpdate = new PlaceUpdate(0, DateTime.Now, newcustomer.Id, newcustomer.Customer.Place.Id);
-                              RestRequest requestPlaceUpdate = new RestRequest("api/placeUpdate/", Method.POST);
+                              // adding new customerPlace
+                              CustomerPlace placeUpdate = new CustomerPlace(0, DateTime.Now, newcustomer.Id, newcustomer.Customer.Place.Id);
+                              RestRequest requestPlaceUpdate = new RestRequest("api/customerPlace/", Method.POST);
                               requestPlaceUpdate.RequestFormat = DataFormat.Json;
                               requestPlaceUpdate.AddJsonBody(placeUpdate);
                               var asyncHandler = _restClient.ExecuteAsync(requestPlaceUpdate, r =>
                               {
                                   if (r.ResponseStatus == ResponseStatus.Completed)
                                   {
-                                      MessageBox.Show("New placeUpdate added"); //TODO: remove before release
+                                      MessageBox.Show("New customerPlace added"); //TODO: remove before release
 
                                   }
                               });
-                              PlacesUpdates = newPlacesUpdates;
+                              CustomersPlaces = newPlacesUpdates;
                           }
                           catch (Exception ex)
                           {
@@ -364,6 +316,22 @@ namespace RecruitmentTest
                   ));
             }
         }
+        private RelayCommand _editPlacesCommand;
+        public RelayCommand EditPlacesCommand
+        {
+            get
+            {
+                return _editPlacesCommand ??
+                  (_editPlacesCommand = new RelayCommand(obj =>
+                  {
+                      Places places = new Places();
+                      places.DataContext = new PlacesWindowVM(_checker, this);
+                      places.Show();
+                      
+                  }, (obj) => SelectedCustomer != null
+                  ));
+            }
+        }
         private RelayCommand _loadCommand;
         public RelayCommand LoadCommand
         {
@@ -390,8 +358,6 @@ namespace RecruitmentTest
             TextBoxName = String.Empty;
             TextBoxFirstName = String.Empty;
             SelectedDate = DateTime.Now;
-            TextBoxStreet = String.Empty;
-            SelectedCity = null;
             SelectedPlace = null;
         }
 
@@ -401,7 +367,7 @@ namespace RecruitmentTest
             Customers.Clear();
             Cities.Clear();
             Places.Clear();
-            PlacesUpdates.Clear();
+            CustomersPlaces.Clear();
 
 
             var requestCustomers = new RestRequest("api/customer", Method.GET);
@@ -433,13 +399,13 @@ namespace RecruitmentTest
                     Places.Add(new PlaceVM(p));
                 }
             }
-            var requestPlacesUpdates = new RestRequest("api/placeUpdate", Method.GET);
-            var queryResultPlacesUpdates = _restClient.Execute<List<PlaceUpdate>>(requestPlacesUpdates).Data;
+            var requestPlacesUpdates = new RestRequest("api/customerPlace", Method.GET);
+            var queryResultPlacesUpdates = _restClient.Execute<List<CustomerPlace>>(requestPlacesUpdates).Data;
             if (queryResultPlacesUpdates != null)
             {
-                foreach (PlaceUpdate p in queryResultPlacesUpdates)
+                foreach (CustomerPlace p in queryResultPlacesUpdates)
                 {
-                    PlacesUpdates.Add(p);
+                    CustomersPlaces.Add(p);
                 }
             }
 
