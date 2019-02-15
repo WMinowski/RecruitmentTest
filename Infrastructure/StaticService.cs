@@ -72,8 +72,7 @@ namespace Infrastructure
                             Id = Convert.ToInt32(reader["Id"]),
                             Name = reader["Name"].ToString(),
                             FirstName = reader["FirstName"].ToString(),
-                            DateOfBirth = Convert.ToDateTime(reader["DateOfBirth"]),
-                            Place = places.Find(x => x.Id == Convert.ToInt32(reader["PlaceId"]))
+                            DateOfBirth = Convert.ToDateTime(reader["DateOfBirth"])
                         });
 
                     }

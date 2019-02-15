@@ -9,18 +9,18 @@ namespace RecruitmentTestAPI.Controllers
     [ApiController]
     public class CustomerPlaceController : ControllerBase
     {
-        private readonly CustomerPlaceService _placeUpdateService;
+        private readonly CustomerPlaceService _customerPlaceService;
 
         public CustomerPlaceController(CustomerPlaceService placeUpdateService)
         {
-            _placeUpdateService = placeUpdateService;
+            _customerPlaceService = placeUpdateService;
         }
 
         [HttpGet]
         public ActionResult<List<CustomerPlace>> Get()
         {
             var temp = new List<CustomerPlace>();
-            foreach (IDBEntity e in _placeUpdateService.Get())
+            foreach (IDBEntity e in _customerPlaceService.Get())
             {
                 temp.Add(e as CustomerPlace);
             }
@@ -31,35 +31,35 @@ namespace RecruitmentTestAPI.Controllers
         [HttpGet("{id}", Name = "GetPlaceUpdate")]
         public ActionResult<CustomerPlace> Get(string id)
         {
-            var placeUpdate = _placeUpdateService.Get(int.Parse(id));
+            var customerPlace = _customerPlaceService.Get(int.Parse(id));
 
-            if (placeUpdate == null)
+            if (customerPlace == null)
             {
                 return NotFound();
             }
 
-            return placeUpdate as CustomerPlace;
+            return customerPlace as CustomerPlace;
         }
 
         [HttpPost]
-        public ActionResult<Place> Create(CustomerPlace placeUpdate)
+        public ActionResult<Place> Create(CustomerPlace customerPlace)
         {
-            _placeUpdateService.Create(placeUpdate);
+            _customerPlaceService.Create(customerPlace);
 
-            return CreatedAtRoute("GetPlaceUpdate", new { id = placeUpdate.Id.ToString() }, placeUpdate);
+            return CreatedAtRoute("GetPlaceUpdate", new { id = customerPlace.Id.ToString() }, customerPlace);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(string id, CustomerPlace placeUpdateIn)
+        public IActionResult Update(string id, CustomerPlace customerPlaceIn)
         {
-            var place = _placeUpdateService.Get(int.Parse(id));
+            var customerPlace = _customerPlaceService.Get(int.Parse(id));
 
-            if (place == null)
+            if (customerPlace == null)
             {
                 return NotFound();
             }
 
-            _placeUpdateService.Update(int.Parse(id), placeUpdateIn);
+            _customerPlaceService.Update(int.Parse(id), customerPlaceIn);
 
             return NoContent();
         }
@@ -67,14 +67,14 @@ namespace RecruitmentTestAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            var placeUpdate = _placeUpdateService.Get(int.Parse(id));
+            var customerPlace = _customerPlaceService.Get(int.Parse(id));
 
-            if (placeUpdate == null)
+            if (customerPlace == null)
             {
                 return NotFound();
             }
 
-            _placeUpdateService.Remove(placeUpdate.Id);
+            _customerPlaceService.Remove(customerPlace.Id);
 
             return NoContent();
         }

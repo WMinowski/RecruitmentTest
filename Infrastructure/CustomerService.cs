@@ -32,13 +32,13 @@ namespace Infrastructure
 
                 StaticService.adapter.InsertCommand = new MySqlCommand(
                                       "INSERT INTO mydb.customers " +
-                                      "VALUES(@Id,@Name,@FirstName,@DateOfBirth,@Place);",
+                                      "VALUES(@Id,@Name,@FirstName,@DateOfBirth);",
                                       connection);
                 StaticService.adapter.InsertCommand.Parameters.Add("@Id", MySqlDbType.Int32).Value = customer.Id;
                 StaticService.adapter.InsertCommand.Parameters.Add("@Name", MySqlDbType.VarChar).Value = customer.Name;
                 StaticService.adapter.InsertCommand.Parameters.Add("@FirstName", MySqlDbType.VarChar).Value = customer.Name;
                 StaticService.adapter.InsertCommand.Parameters.Add("@DateOfBirth", MySqlDbType.Date).Value = customer.DateOfBirth.ToString("yyyy-MM-dd");
-                StaticService.adapter.InsertCommand.Parameters.Add("@Place", MySqlDbType.Int32).Value = customer.Place.Id;
+
 
 
                 connection.Open();
@@ -57,8 +57,7 @@ namespace Infrastructure
                             @"UPDATE customers SET Id = " + customerIn.Id + " ,Name = '" + customerIn.Name +
                             @"',FirstName = '" + customerIn.FirstName +
                             @"',DateOfBirth = '" + customerIn.DateOfBirth.ToString("yyyy-MM-dd") + 
-                            @"',PlaceId = " + customerIn.Place.Id.ToString() +
-                            @" WHERE (" +
+                            @"' WHERE (" +
                             @"Id = " + id + @")";
 
                 MySqlDataAdapter localAadapter = new MySqlDataAdapter();

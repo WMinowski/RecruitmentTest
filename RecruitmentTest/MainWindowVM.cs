@@ -43,7 +43,7 @@ namespace RecruitmentTest
                     TextBoxFirstName = _selectedCustomer.FirstName;
                     SelectedDate = _selectedCustomer.DateOfBirth;
 
-                    SelectedPlace = Places.First<PlaceVM>(x => x.ToString() == _selectedCustomer.Place);
+                    SelectedPlace = Places.First<PlaceVM>(x => x.ToString() == _selectedCustomer.PlaceToString);
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace RecruitmentTest
                       try
                       {
 
-                          CustomerVM customer = new CustomerVM(new Customer(Customers.Last().Id+1, TextBoxName, TextBoxFirstName, SelectedDate, SelectedPlace.Place));
+                          CustomerVM customer = new CustomerVM(new Customer(Customers.Last().Id+1, TextBoxName, TextBoxFirstName, SelectedDate), SelectedPlace);
                           Customers.Insert(0, customer);
                           SelectedCustomer = customer;
 
@@ -121,7 +121,7 @@ namespace RecruitmentTest
                               }
                           });
 
-                          CustomerPlace cp = new CustomerPlace(0, DateTime.Now, customer.Id, customer.Customer.Place.Id);
+                          CustomerPlace cp = new CustomerPlace(0, DateTime.Now, customer.Id, customer.Place.Id);
                           var requestCustomersPlaces = new RestRequest("api/customerPlace", Method.POST);
                           requestCustomersPlaces.RequestFormat = DataFormat.Json;
                           requestCustomersPlaces.AddJsonBody(cp);// Serialize Domain.Customer, not CustomerVM!!!
@@ -150,7 +150,7 @@ namespace RecruitmentTest
                 || SelectedCustomer.Name != TextBoxName // if one of selected customer fields != proper textbox entry - return true
                 || SelectedCustomer.FirstName != TextBoxFirstName
                 || SelectedCustomer.DateOfBirth != SelectedDate
-                || SelectedCustomer.Place != SelectedPlace.ToString());
+                || SelectedCustomer.PlaceToString != SelectedPlace.ToString());
             // if all fields coincide with textbox entries - return false
         }
 
@@ -241,7 +241,7 @@ namespace RecruitmentTest
                               
 
                               // updating customer
-                              CustomerVM newcustomer = new CustomerVM(new Customer(customer.Id, TextBoxName, TextBoxFirstName, SelectedDate, SelectedPlace.Place));
+                              CustomerVM newcustomer = new CustomerVM(new Customer(customer.Id, TextBoxName, TextBoxFirstName, SelectedDate), SelectedPlace);
                               RestRequest requestUpdate = new RestRequest("api/customer/" + customer.Id.ToString(), Method.PUT);
                               requestUpdate.AddJsonBody(newcustomer.Customer);
                               requestUpdate.RequestFormat = DataFormat.Json;
@@ -252,7 +252,7 @@ namespace RecruitmentTest
                               _restClient.Execute(requestUpdate);
 
                               // adding new customerPlace
-                              CustomerPlace placeUpdate = new CustomerPlace(0, DateTime.Now, newcustomer.Id, newcustomer.Customer.Place.Id);
+                              CustomerPlace placeUpdate = new CustomerPlace(0, DateTime.Now, newcustomer.Id, newcustomer.Place.Id);
                               RestRequest requestPlaceUpdate = new RestRequest("api/customerPlace/", Method.POST);
                               requestPlaceUpdate.RequestFormat = DataFormat.Json;
                               requestPlaceUpdate.AddJsonBody(placeUpdate);
@@ -306,7 +306,7 @@ namespace RecruitmentTest
                       if (fields[0].Value != string.Empty) { filteredList = filteredList.Where(x => x.Name == TextBoxName).ToList(); }
                       if (fields[1].Value != string.Empty) { filteredList = filteredList.Where(x => x.FirstName == TextBoxFirstName).ToList(); }
                       if (fields[2].Value != string.Empty) { filteredList = filteredList.Where(x => x.DateOfBirth == SelectedDate).ToList(); }
-                      if (fields[3].Value != string.Empty) { filteredList = filteredList.Where(x => x.Place == SelectedPlace.ToString()).ToList(); }
+                      if (fields[3].Value != string.Empty) { filteredList = filteredList.Where(x => x.Place.ToString() == SelectedPlace.ToString()).ToList(); }
                       Customers.Clear();
                       foreach (CustomerVM c in filteredList)
                       {
@@ -326,7 +326,7 @@ namespace RecruitmentTest
                   {
                       Places places = new Places();
                       places.DataContext = new PlacesWindowVM(_checker, this);
-                      places.Show();
+                      places.ShowDialog(); // TODO: make modal window
                       
                   }, (obj) => SelectedCustomer != null
                   ));
@@ -370,15 +370,7 @@ namespace RecruitmentTest
             CustomersPlaces.Clear();
 
 
-            var requestCustomers = new RestRequest("api/customer", Method.GET);
-            var queryResultCustomers = _restClient.Execute<List<Customer>>(requestCustomers).Data;
-            if (queryResultCustomers != null)
-            {
-                foreach (Customer c in queryResultCustomers)
-                {
-                    Customers.Add(new CustomerVM(c));
-                }
-            }
+            
 
             var requestCities = new RestRequest("api/city", Method.GET);
             var queryResultCities = _restClient.Execute<List<City>>(requestCities).Data;
@@ -399,17 +391,32 @@ namespace RecruitmentTest
                     Places.Add(new PlaceVM(p));
                 }
             }
-            var requestPlacesUpdates = new RestRequest("api/customerPlace", Method.GET);
-            var queryResultPlacesUpdates = _restClient.Execute<List<CustomerPlace>>(requestPlacesUpdates).Data;
-            if (queryResultPlacesUpdates != null)
+            var requestCustomersPlaces = new RestRequest("api/customerPlace", Method.GET);
+            var queryResultCustomersPlaces = _restClient.Execute<List<CustomerPlace>>(requestCustomersPlaces).Data;
+            if (queryResultCustomersPlaces != null)
             {
-                foreach (CustomerPlace p in queryResultPlacesUpdates)
+                foreach (CustomerPlace p in queryResultCustomersPlaces)
                 {
                     CustomersPlaces.Add(p);
                 }
             }
 
+            var requestCustomers = new RestRequest("api/customer", Method.GET);
+            var queryResultCustomers = _restClient.Execute<List<Customer>>(requestCustomers).Data;
+            if (queryResultCustomers != null)
+            {
+                foreach (Customer c in queryResultCustomers)
+                {
+                    Customers.Add(new CustomerVM(c, GetPlaceByCustomerId(c)));
+                }
+            }
+
             ClearText();
+        }
+
+        public PlaceVM GetPlaceByCustomerId(Customer c)
+        {
+            return Places.First(x => x.Id == CustomersPlaces.Where(y => y.CustomerId == c.Id).OrderByDescending(z => z.UpdateTime).First().PlaceId);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -14,4 +14,4 @@
 #select customers.Id, customers.Name, customers.FirstName, customers.DateOfBirth, customers.Street, cities.City from customers left join cities on customers.CityId=cities.Id
 #select mydb.customers.Name, mydb.customers.FirstName, mydb.customers.DateOfBirth, mydb.customers.Street, mydb.cities.City from mydb.customers left join mydb.cities on mydb.customers.CityId=mydb.cities.Id where(Name = 'Kuznetsov')and(FirstName = 'Sergey')and(DateOfBirth = '1973-06-08')and(Street = 'street')and(CityId = '1')
 #DELETE FROM mydb.customers WHERE (Id = '3');
-select * from mydb.placesupdates
+select * from mydb.customersplaces
