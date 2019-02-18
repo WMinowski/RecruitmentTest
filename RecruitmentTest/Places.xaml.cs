@@ -22,6 +22,7 @@ namespace RecruitmentTest
         public Places()
         {
             InitializeComponent();
+            this.Owner = App.Current.MainWindow;
         }
         public bool HasValidationErrors()
         {
