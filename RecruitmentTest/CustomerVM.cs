@@ -56,11 +56,6 @@ namespace RecruitmentTest
                 OnPropertyChanged("DateOfBirth");
             }
         }
-        public string PlaceToString //TODO: Remove&replace calls
-        {
-            get { return Place.ToString(); }
-            // no set
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")

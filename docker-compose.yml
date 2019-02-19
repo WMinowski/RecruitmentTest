@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  recruitmenttestapi:
+    image: ${DOCKER_REGISTRY-}recruitmenttestapi
+    build:
+      context: .
+      dockerfile: RecruitmentTestAPI\Dockerfile
+  db:
+    image: mysql:5.7
+
+    build:
+      context: ./MySQLDB
+      dockerfile: ./Dockerfile
+    ports:
+      - 3306:3306  
+    volumes:
+      - db-data:/var/lib/mysql   
+    networks:
+       - overlay
+volumes:
+  db-data:
+networks:
+  overlay:

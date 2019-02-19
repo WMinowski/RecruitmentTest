@@ -43,7 +43,7 @@ namespace RecruitmentTest
                     TextBoxFirstName = _selectedCustomer.FirstName;
                     SelectedDate = _selectedCustomer.DateOfBirth;
 
-                    SelectedPlace = Places.First<PlaceVM>(x => x.ToString() == _selectedCustomer.PlaceToString);
+                    SelectedPlace = Places.First<PlaceVM>(x => x.ToString() == _selectedCustomer.Place.ToString());
                 }
             }
         }
@@ -150,7 +150,7 @@ namespace RecruitmentTest
                 || SelectedCustomer.Name != TextBoxName // if one of selected customer fields != proper textbox entry - return true
                 || SelectedCustomer.FirstName != TextBoxFirstName
                 || SelectedCustomer.DateOfBirth != SelectedDate
-                || SelectedCustomer.PlaceToString != SelectedPlace.ToString());
+                || SelectedCustomer.Place.ToString() != SelectedPlace.ToString());
             // if all fields coincide with textbox entries - return false
         }
 

@@ -11,9 +11,9 @@ namespace RecruitmentTestAPI.Controllers
     {
         private readonly CustomerPlaceService _customerPlaceService;
 
-        public CustomerPlaceController(CustomerPlaceService placeUpdateService)
+        public CustomerPlaceController(CustomerPlaceService customerPlaceService)
         {
-            _customerPlaceService = placeUpdateService;
+            _customerPlaceService = customerPlaceService;
         }
 
         [HttpGet]
