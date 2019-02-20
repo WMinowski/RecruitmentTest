@@ -1,7 +1,8 @@
 ﻿using DomainStandard;
-using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Text;
 
 namespace Infrastructure
@@ -16,10 +17,10 @@ namespace Infrastructure
 
         public void Remove(int id)
         {
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
                 StaticService.adapter.DeleteCommand =
-                                      new MySqlCommand("DELETE FROM mydb.customersPlaces WHERE (Id = " + id.ToString() + ");", connection);
+                                      new SqlCommand("DELETE FROM mydb.customersPlaces WHERE (Id = " + id.ToString() + ");", connection);
                 connection.Open();
                 StaticService.adapter.DeleteCommand.ExecuteNonQuery();
             }
@@ -29,10 +30,10 @@ namespace Infrastructure
         public void Remove(IDBEntity entity)
         {
             CustomerPlace customerPlaceIn = (CustomerPlace)entity;
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
                 StaticService.adapter.DeleteCommand =
-                                      new MySqlCommand("DELETE FROM mydb.customersPlaces WHERE (Id = " + customerPlaceIn.Id + ");", connection);
+                                      new SqlCommand("DELETE FROM mydb.customersPlaces WHERE (Id = " + customerPlaceIn.Id + ");", connection);
                 connection.Open();
                 StaticService.adapter.DeleteCommand.ExecuteNonQuery();
             }
@@ -43,16 +44,16 @@ namespace Infrastructure
         public void Update(int id, IDBEntity entity)
         {
             CustomerPlace customerPlaceIn = (CustomerPlace)entity;
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
                 string query =
                             @"UPDATE customersPlaces SET Id =" + customerPlaceIn.Id + " ,UpdateTime = '" + customerPlaceIn.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss") + "' ,CustomerId = " + customerPlaceIn.CustomerId + " ,PlaceId = " + customerPlaceIn.PlaceId +
                             @" WHERE (" +
                             @"Id = " + customerPlaceIn.Id + @")";
 
-                MySqlDataAdapter localAadapter = new MySqlDataAdapter();
+                SqlDataAdapter localAadapter = new SqlDataAdapter();
 
-                localAadapter.UpdateCommand = new MySqlCommand(query, connection);
+                localAadapter.UpdateCommand = new SqlCommand(query, connection);
                 connection.Open();
                 localAadapter.UpdateCommand.ExecuteNonQuery();
             }
@@ -64,16 +65,16 @@ namespace Infrastructure
         public IDBEntity Create(IDBEntity entity)
         {
             CustomerPlace customerPlace = (CustomerPlace)entity;
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
-                StaticService.adapter.InsertCommand = new MySqlCommand(
+                StaticService.adapter.InsertCommand = new SqlCommand(
                                       "INSERT INTO mydb.customersPlaces " +
                                       "VALUES(@Id,@UpdateTime,@CustomerId,@PlaceId);",
                                       connection);
-                StaticService.adapter.InsertCommand.Parameters.Add("@Id", MySqlDbType.Int32).Value = customerPlace.Id;
-                StaticService.adapter.InsertCommand.Parameters.Add("@UpdateTime", MySqlDbType.Timestamp).Value = customerPlace.UpdateTime; // no ToString("FormatString")
-                StaticService.adapter.InsertCommand.Parameters.Add("@CustomerId", MySqlDbType.Int32).Value = customerPlace.CustomerId;
-                StaticService.adapter.InsertCommand.Parameters.Add("@PlaceId", MySqlDbType.Int32).Value = customerPlace.PlaceId;
+                StaticService.adapter.InsertCommand.Parameters.Add("@Id", SqlDbType.Int).Value = customerPlace.Id;
+                StaticService.adapter.InsertCommand.Parameters.Add("@UpdateTime", SqlDbType.Timestamp).Value = customerPlace.UpdateTime; // no ToString("FormatString")
+                StaticService.adapter.InsertCommand.Parameters.Add("@CustomerId", SqlDbType.Int).Value = customerPlace.CustomerId;
+                StaticService.adapter.InsertCommand.Parameters.Add("@PlaceId", SqlDbType.Int).Value = customerPlace.PlaceId;
 
                 connection.Open();
                 StaticService.adapter.InsertCommand.ExecuteNonQuery();

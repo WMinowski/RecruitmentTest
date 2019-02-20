@@ -1,7 +1,7 @@
 ﻿using DomainStandard;
-using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 
 namespace Infrastructure
 {
@@ -12,20 +12,20 @@ namespace Infrastructure
         public static List<Place> places = new List<Place>();
         public static List<CustomerPlace> customersPlaces = new List<CustomerPlace>();
         public static string ConnectionString { get; set; }
-        public static MySqlDataAdapter adapter = new MySqlDataAdapter();
+        public static SqlDataAdapter adapter = new SqlDataAdapter();
 
-        public static MySqlConnection GetConnection()
+        public static SqlConnection GetConnection()
         {
-            return new MySqlConnection(ConnectionString);
+            return new SqlConnection(ConnectionString);
         }
 
         public static void GetData(string connectionString)
         {
             ConnectionString = connectionString;
-            using (MySqlConnection conn = GetConnection())
+            using (SqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.cities", conn);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM mydb.cities", conn);
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -39,10 +39,10 @@ namespace Infrastructure
                 }
             }
 
-            using (MySqlConnection conn = GetConnection())
+            using (SqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.places", conn);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM mydb.places", conn);
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -58,10 +58,10 @@ namespace Infrastructure
                 }
             }
 
-            using (MySqlConnection conn = GetConnection())
+            using (SqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.customers", conn); 
+                SqlCommand cmd = new SqlCommand("SELECT * FROM mydb.customers", conn); 
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -79,10 +79,10 @@ namespace Infrastructure
                 }
 
             }
-            using (MySqlConnection conn = GetConnection())
+            using (SqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.customersPlaces", conn); 
+                SqlCommand cmd = new SqlCommand("SELECT * FROM mydb.customersPlaces", conn); 
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())

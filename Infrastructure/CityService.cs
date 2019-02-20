@@ -1,7 +1,7 @@
 ﻿using DomainStandard;
-using MySql.Data.MySqlClient;
 using System.Collections.Generic;
-
+using System.Data;
+using System.Data.SqlClient;
 
 namespace Infrastructure
 {
@@ -14,10 +14,10 @@ namespace Infrastructure
 
         public void Remove(int id)
         {
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
                 StaticService.adapter.DeleteCommand =
-                                      new MySqlCommand("DELETE FROM mydb.cities WHERE (Id = " + id.ToString() + ");", connection);
+                                      new SqlCommand("DELETE FROM mydb.cities WHERE (Id = " + id.ToString() + ");", connection);
                 connection.Open();
                 StaticService.adapter.DeleteCommand.ExecuteNonQuery();
             }
@@ -27,10 +27,10 @@ namespace Infrastructure
         public void Remove(IDBEntity entity)
         {
             City cityIn = (City)entity;
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
                 StaticService.adapter.DeleteCommand =
-                                      new MySqlCommand("DELETE FROM mydb.cities WHERE (Id = " + cityIn.Id + ");", connection);
+                                      new SqlCommand("DELETE FROM mydb.cities WHERE (Id = " + cityIn.Id + ");", connection);
                 connection.Open();
                 StaticService.adapter.DeleteCommand.ExecuteNonQuery();
             }
@@ -41,16 +41,16 @@ namespace Infrastructure
         public void Update(int id, IDBEntity entity)
         {
             City cityIn = (City)entity;
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
                 string query =
                             @"UPDATE cities SET Id =" + cityIn.Id + " ,City = '" + cityIn.Name +
                             @" WHERE (" +
                             @"Id = " + cityIn.Id + @")";
 
-                MySqlDataAdapter localAadapter = new MySqlDataAdapter();
+                SqlDataAdapter localAadapter = new SqlDataAdapter();
 
-                localAadapter.UpdateCommand = new MySqlCommand(query, connection);
+                localAadapter.UpdateCommand = new SqlCommand(query, connection);
                 connection.Open();
                 localAadapter.UpdateCommand.ExecuteNonQuery();
             }
@@ -62,14 +62,14 @@ namespace Infrastructure
         public IDBEntity Create(IDBEntity entity)
         {
             City city = (City)entity;
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
-                StaticService.adapter.InsertCommand = new MySqlCommand(
+                StaticService.adapter.InsertCommand = new SqlCommand(
                                       "INSERT INTO mydb.cities " +
                                       "VALUES(@Id,@City);",
                                       connection);
-                StaticService.adapter.InsertCommand.Parameters.Add("@Id", MySqlDbType.Int32).Value = city.Id;
-                StaticService.adapter.InsertCommand.Parameters.Add("@City", MySqlDbType.VarChar).Value = city.Name;
+                StaticService.adapter.InsertCommand.Parameters.Add("@Id", SqlDbType.Int).Value = city.Id;
+                StaticService.adapter.InsertCommand.Parameters.Add("@City", SqlDbType.VarChar).Value = city.Name;
 
 
                 connection.Open();

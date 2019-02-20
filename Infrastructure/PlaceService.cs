@@ -1,7 +1,8 @@
 ﻿using DomainStandard;
-using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Text;
 
 namespace Infrastructure
@@ -15,10 +16,10 @@ namespace Infrastructure
 
         public void Remove(int id)
         {
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
                 StaticService.adapter.DeleteCommand =
-                                      new MySqlCommand("DELETE FROM mydb.places WHERE (Id = " + id.ToString() + ");", connection);
+                                      new SqlCommand("DELETE FROM mydb.places WHERE (Id = " + id.ToString() + ");", connection);
                 connection.Open();
                 StaticService.adapter.DeleteCommand.ExecuteNonQuery();
             }
@@ -28,10 +29,10 @@ namespace Infrastructure
         public void Remove(IDBEntity entity)
         {
             Place placeIn = (Place)entity;
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
                 StaticService.adapter.DeleteCommand =
-                                      new MySqlCommand("DELETE FROM mydb.places WHERE (Id = " + placeIn.Id + ");", connection);
+                                      new SqlCommand("DELETE FROM mydb.places WHERE (Id = " + placeIn.Id + ");", connection);
                 connection.Open();
                 StaticService.adapter.DeleteCommand.ExecuteNonQuery();
             }
@@ -42,16 +43,16 @@ namespace Infrastructure
         public void Update(int id, IDBEntity entity)
         {
             Place placeIn = (Place)entity;
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
                 string query =
                             @"UPDATE places SET Id =" + placeIn.Id + " ,CityId = '" + placeIn.City.Id + "' ,Street = '"+ placeIn.Street +
                             @"' WHERE (" +
                             @"Id = " + placeIn.Id + @")";
 
-                MySqlDataAdapter localAadapter = new MySqlDataAdapter();
+                SqlDataAdapter localAadapter = new SqlDataAdapter();
 
-                localAadapter.UpdateCommand = new MySqlCommand(query, connection);
+                localAadapter.UpdateCommand = new SqlCommand(query, connection);
                 connection.Open();
                 localAadapter.UpdateCommand.ExecuteNonQuery();
             }
@@ -63,15 +64,15 @@ namespace Infrastructure
         public IDBEntity Create(IDBEntity entity)
         {
             Place place = (Place)entity;
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
-                StaticService.adapter.InsertCommand = new MySqlCommand(
+                StaticService.adapter.InsertCommand = new SqlCommand(
                                       "INSERT INTO mydb.places " +
                                       "VALUES(@Id,@CityId,@Street);",
                                       connection);
-                StaticService.adapter.InsertCommand.Parameters.Add("@Id", MySqlDbType.Int32).Value = place.Id;
-                StaticService.adapter.InsertCommand.Parameters.Add("@CityId", MySqlDbType.Int32).Value = place.City.Id;
-                StaticService.adapter.InsertCommand.Parameters.Add("@Street", MySqlDbType.VarChar).Value = place.Street;
+                StaticService.adapter.InsertCommand.Parameters.Add("@Id", SqlDbType.Int).Value = place.Id;
+                StaticService.adapter.InsertCommand.Parameters.Add("@CityId", SqlDbType.Int).Value = place.City.Id;
+                StaticService.adapter.InsertCommand.Parameters.Add("@Street", SqlDbType.VarChar).Value = place.Street;
 
 
                 connection.Open();

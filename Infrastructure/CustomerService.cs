@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using DomainStandard;
-using MySql.Data.MySqlClient;
 
 namespace Infrastructure
 {
@@ -27,17 +28,17 @@ namespace Infrastructure
         public IDBEntity Create(IDBEntity entity)
         {
             Customer customer = (Customer)entity;
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
 
-                StaticService.adapter.InsertCommand = new MySqlCommand(
+                StaticService.adapter.InsertCommand = new SqlCommand(
                                       "INSERT INTO mydb.customers " +
                                       "VALUES(@Id,@Name,@FirstName,@DateOfBirth);",
                                       connection);
-                StaticService.adapter.InsertCommand.Parameters.Add("@Id", MySqlDbType.Int32).Value = customer.Id;
-                StaticService.adapter.InsertCommand.Parameters.Add("@Name", MySqlDbType.VarChar).Value = customer.Name;
-                StaticService.adapter.InsertCommand.Parameters.Add("@FirstName", MySqlDbType.VarChar).Value = customer.Name;
-                StaticService.adapter.InsertCommand.Parameters.Add("@DateOfBirth", MySqlDbType.Date).Value = customer.DateOfBirth.ToString("yyyy-MM-dd");
+                StaticService.adapter.InsertCommand.Parameters.Add("@Id", SqlDbType.Int).Value = customer.Id;
+                StaticService.adapter.InsertCommand.Parameters.Add("@Name", SqlDbType.VarChar).Value = customer.Name;
+                StaticService.adapter.InsertCommand.Parameters.Add("@FirstName", SqlDbType.VarChar).Value = customer.Name;
+                StaticService.adapter.InsertCommand.Parameters.Add("@DateOfBirth", SqlDbType.Date).Value = customer.DateOfBirth.ToString("yyyy-MM-dd");
 
 
 
@@ -51,7 +52,7 @@ namespace Infrastructure
         public void Update(int id, IDBEntity entity)
         {
             Customer customerIn = (Customer)entity;
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
                 string query =
                             @"UPDATE customers SET Id = " + customerIn.Id + " ,Name = '" + customerIn.Name +
@@ -60,9 +61,9 @@ namespace Infrastructure
                             @"' WHERE (" +
                             @"Id = " + id + @")";
 
-                MySqlDataAdapter localAadapter = new MySqlDataAdapter();
+                SqlDataAdapter localAadapter = new SqlDataAdapter();
 
-                localAadapter.UpdateCommand = new MySqlCommand(query, connection);
+                localAadapter.UpdateCommand = new SqlCommand(query, connection);
                 connection.Open();
                 localAadapter.UpdateCommand.ExecuteNonQuery();
             }
@@ -74,10 +75,10 @@ namespace Infrastructure
         public void Remove(IDBEntity entity)
         {
             Customer customerIn = (Customer)entity;
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
                 StaticService.adapter.DeleteCommand =
-                                      new MySqlCommand("DELETE FROM mydb.customers WHERE (Name = '" + customerIn.Name + "') AND (FirstName = '"
+                                      new SqlCommand("DELETE FROM mydb.customers WHERE (Name = '" + customerIn.Name + "') AND (FirstName = '"
                                       + customerIn.FirstName + "');", connection);
                 connection.Open();
                 StaticService.adapter.DeleteCommand.ExecuteNonQuery();
@@ -88,10 +89,10 @@ namespace Infrastructure
 
         public void Remove(int id)
         {
-            using (MySqlConnection connection = StaticService.GetConnection())
+            using (SqlConnection connection = StaticService.GetConnection())
             {
                 StaticService.adapter.DeleteCommand =
-                                      new MySqlCommand("DELETE FROM mydb.customers WHERE (Id = '" + id.ToString() + "');", connection);
+                                      new SqlCommand("DELETE FROM mydb.customers WHERE (Id = '" + id.ToString() + "');", connection);
                 connection.Open();
                 StaticService.adapter.DeleteCommand.ExecuteNonQuery();
             }
