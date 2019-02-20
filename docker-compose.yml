@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: RecruitmentTestAPI\Dockerfile
+    depends_on:
+      - db
   db:
     image: mysql:5.7
 
@@ -17,8 +19,10 @@ services:
     volumes:
       - db-data:/var/lib/mysql   
     networks:
-       - overlay
+      - default
 volumes:
   db-data:
 networks:
-  overlay:
+  default:
+    external:
+      name: nat
