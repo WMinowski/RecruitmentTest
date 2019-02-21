@@ -71,7 +71,7 @@ namespace Infrastructure
                                       "INSERT INTO mydb.customersPlaces " +
                                       "VALUES(@UpdateTime,@CustomerId,@PlaceId);",
                                       connection);
-                StaticService.adapter.InsertCommand.Parameters.Add("@UpdateTime", SqlDbType.Timestamp).Value = customerPlace.UpdateTime; // no ToString("FormatString")
+                StaticService.adapter.InsertCommand.Parameters.Add("@UpdateTime", SqlDbType.DateTime).Value = customerPlace.UpdateTime; // no ToString("FormatString")
                 StaticService.adapter.InsertCommand.Parameters.Add("@CustomerId", SqlDbType.Int).Value = customerPlace.CustomerId;
                 StaticService.adapter.InsertCommand.Parameters.Add("@PlaceId", SqlDbType.Int).Value = customerPlace.PlaceId;
 
