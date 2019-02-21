@@ -24,6 +24,7 @@ namespace Infrastructure
             ConnectionString = connectionString;
             using (SqlConnection conn = GetConnection())
             {
+                
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("SELECT * FROM mydb.cities", conn);
                 using (var reader = cmd.ExecuteReader())

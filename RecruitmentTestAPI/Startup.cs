@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using TodoApi.Models;
 
 namespace TodoApi
@@ -26,7 +27,7 @@ namespace TodoApi
             services.AddDbContext<TodoContext>(opt =>
                 opt.UseInMemoryDatabase("TodoList"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            StaticService.GetData(Configuration.GetConnectionString("DefaultConnection"));
+            StaticService.GetData(Configuration.GetConnectionString("DefaultConnection") + AppDomain.CurrentDomain.BaseDirectory + "mydb.mdf;");
             services.Add(new ServiceDescriptor(typeof(CustomerService), new CustomerService()));
             services.Add(new ServiceDescriptor(typeof(CityService), new CityService()));
             services.Add(new ServiceDescriptor(typeof(PlaceService), new PlaceService()));
