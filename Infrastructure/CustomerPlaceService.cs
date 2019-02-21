@@ -47,7 +47,7 @@ namespace Infrastructure
             using (SqlConnection connection = StaticService.GetConnection())
             {
                 string query =
-                            @"UPDATE customersPlaces SET Id =" + customerPlaceIn.Id + " ,UpdateTime = '" + customerPlaceIn.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss") + "' ,CustomerId = " + customerPlaceIn.CustomerId + " ,PlaceId = " + customerPlaceIn.PlaceId +
+                            @"UPDATE mydb.customersPlaces SET UpdateTime = '" + customerPlaceIn.UpdateTime.ToString("yyyy-MM-dd hh:mm:ss") + "' ,CustomerId = " + customerPlaceIn.CustomerId + " ,PlaceId = " + customerPlaceIn.PlaceId +
                             @" WHERE (" +
                             @"Id = " + customerPlaceIn.Id + @")";
 
@@ -69,9 +69,8 @@ namespace Infrastructure
             {
                 StaticService.adapter.InsertCommand = new SqlCommand(
                                       "INSERT INTO mydb.customersPlaces " +
-                                      "VALUES(@Id,@UpdateTime,@CustomerId,@PlaceId);",
+                                      "VALUES(@UpdateTime,@CustomerId,@PlaceId);",
                                       connection);
-                StaticService.adapter.InsertCommand.Parameters.Add("@Id", SqlDbType.Int).Value = customerPlace.Id;
                 StaticService.adapter.InsertCommand.Parameters.Add("@UpdateTime", SqlDbType.Timestamp).Value = customerPlace.UpdateTime; // no ToString("FormatString")
                 StaticService.adapter.InsertCommand.Parameters.Add("@CustomerId", SqlDbType.Int).Value = customerPlace.CustomerId;
                 StaticService.adapter.InsertCommand.Parameters.Add("@PlaceId", SqlDbType.Int).Value = customerPlace.PlaceId;

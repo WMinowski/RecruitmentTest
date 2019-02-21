@@ -33,9 +33,8 @@ namespace Infrastructure
 
                 StaticService.adapter.InsertCommand = new SqlCommand(
                                       "INSERT INTO mydb.customers " +
-                                      "VALUES(@Id,@Name,@FirstName,@DateOfBirth);",
+                                      "VALUES(@Name,@FirstName,@DateOfBirth);",
                                       connection);
-                StaticService.adapter.InsertCommand.Parameters.Add("@Id", SqlDbType.Int).Value = customer.Id;
                 StaticService.adapter.InsertCommand.Parameters.Add("@Name", SqlDbType.VarChar).Value = customer.Name;
                 StaticService.adapter.InsertCommand.Parameters.Add("@FirstName", SqlDbType.VarChar).Value = customer.Name;
                 StaticService.adapter.InsertCommand.Parameters.Add("@DateOfBirth", SqlDbType.Date).Value = customer.DateOfBirth.ToString("yyyy-MM-dd");
@@ -55,7 +54,7 @@ namespace Infrastructure
             using (SqlConnection connection = StaticService.GetConnection())
             {
                 string query =
-                            @"UPDATE customers SET Id = " + customerIn.Id + " ,Name = '" + customerIn.Name +
+                            @"UPDATE mydb.customers SET Name = '" + customerIn.Name +
                             @"',FirstName = '" + customerIn.FirstName +
                             @"',DateOfBirth = '" + customerIn.DateOfBirth.ToString("yyyy-MM-dd") + 
                             @"' WHERE (" +

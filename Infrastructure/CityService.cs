@@ -44,7 +44,7 @@ namespace Infrastructure
             using (SqlConnection connection = StaticService.GetConnection())
             {
                 string query =
-                            @"UPDATE cities SET Id =" + cityIn.Id + " ,City = '" + cityIn.Name +
+                            @"UPDATE mydb.cities SET City = '" + cityIn.Name +
                             @" WHERE (" +
                             @"Id = " + cityIn.Id + @")";
 
@@ -66,9 +66,8 @@ namespace Infrastructure
             {
                 StaticService.adapter.InsertCommand = new SqlCommand(
                                       "INSERT INTO mydb.cities " +
-                                      "VALUES(@Id,@City);",
+                                      "VALUES(@City);",
                                       connection);
-                StaticService.adapter.InsertCommand.Parameters.Add("@Id", SqlDbType.Int).Value = city.Id;
                 StaticService.adapter.InsertCommand.Parameters.Add("@City", SqlDbType.VarChar).Value = city.Name;
 
 
