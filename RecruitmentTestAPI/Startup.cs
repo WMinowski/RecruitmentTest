@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using TodoApi.Models;
 
 namespace TodoApi
@@ -17,6 +19,8 @@ namespace TodoApi
         {
             Configuration = configuration;
         }
+        [DllImport("Shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern IntPtr ShellExecute(IntPtr hwnd, string lpOperation, string lpFile, string lpParameters, string lpDirectory, int nShowCmd);
 
         public IConfiguration Configuration { get; }
 
@@ -24,10 +28,28 @@ namespace TodoApi
         //container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TodoContext>(opt =>
+            ShellExecute(IntPtr.Zero, "open", "sqllocaldb.exe", "start MSSQLLocalDB", null, 1);
+            //ShellExecute(IntPtr.Zero, "open", "mybat.bat", null, null, 1);
+            //ShellExecute(IntPtr.Zero, "open", "sqllocaldb.exe", "info MSSQLLocalDB> C:\\Users\\Witalij\\temp.txt", null, 1);
+            string connection;
+            using (Process p = new Process())
+            {
+                p.StartInfo.FileName = "sqllocaldb.exe";
+                p.StartInfo.Arguments = "info MSSQLLocalDB";
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.Start();
+
+                string[] cmdOutput = p.StandardOutput.ReadToEnd().Split(":");
+                p.WaitForExit();
+                connection = "Server=np:" + cmdOutput[cmdOutput.Length - 1] + "; Integrated Security=true; AttachDbFileName = " + AppDomain.CurrentDomain.BaseDirectory + "mydb.mdf;";
+
+
+            }
+                services.AddDbContext<TodoContext>(opt =>
                 opt.UseInMemoryDatabase("TodoList"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            StaticService.GetData(Configuration.GetConnectionString("DefaultConnection") + AppDomain.CurrentDomain.BaseDirectory + "mydb.mdf;");
+            StaticService.GetData(connection);
             services.Add(new ServiceDescriptor(typeof(CustomerService), new CustomerService()));
             services.Add(new ServiceDescriptor(typeof(CityService), new CityService()));
             services.Add(new ServiceDescriptor(typeof(PlaceService), new PlaceService()));
