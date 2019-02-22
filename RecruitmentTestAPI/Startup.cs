@@ -29,8 +29,6 @@ namespace TodoApi
         public void ConfigureServices(IServiceCollection services)
         {
             ShellExecute(IntPtr.Zero, "open", "sqllocaldb.exe", "start MSSQLLocalDB", null, 1);
-            //ShellExecute(IntPtr.Zero, "open", "mybat.bat", null, null, 1);
-            //ShellExecute(IntPtr.Zero, "open", "sqllocaldb.exe", "info MSSQLLocalDB> C:\\Users\\Witalij\\temp.txt", null, 1);
             string connection;
             using (Process p = new Process())
             {
