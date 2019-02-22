@@ -1,13 +1,10 @@
 ﻿using DomainStandard;
 using RestSharp;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using DataFormat = RestSharp.DataFormat;
 
@@ -82,7 +79,7 @@ namespace RecruitmentTest
                           {
                               if (r.ResponseStatus == ResponseStatus.Completed)
                               {
-                                  MessageBox.Show("New place added"); //TODO: remove before release
+                                  // do smth
 
                               }
                           });
@@ -98,13 +95,11 @@ namespace RecruitmentTest
 
         public PlacesWindowVM(IErrorChecker checker, MainWindowVM mainWindowVM)
         {
-            //LoadDatabase();
             _mainWindowVM = mainWindowVM;
             foreach(CityVM c in _mainWindowVM.Cities)
             {
                 Cities.Add(c);
             }
-            //foreach(PlaceVM p in _mainWindowVM.Places.Where(x=>x.Id==))
             foreach(CustomerPlace cp in _mainWindowVM.CustomersPlaces.Where(x=>x.CustomerId == (_mainWindowVM.SelectedCustomer.Id)))
             {
                 Places.Add(_mainWindowVM.Places.First(x => x.Id == cp.CustomerId));

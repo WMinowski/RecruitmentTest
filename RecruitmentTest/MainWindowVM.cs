@@ -116,7 +116,7 @@ namespace RecruitmentTest
                           {
                               if (r.ResponseStatus == ResponseStatus.Completed)
                               {
-                                  MessageBox.Show("New customer added"); //TODO: remove before release
+                                 //do smth
 
                               }
                           });
@@ -129,7 +129,7 @@ namespace RecruitmentTest
                           {
                               if (r.ResponseStatus == ResponseStatus.Completed)
                               {
-                                  MessageBox.Show("New customerPlace added"); //TODO: remove before release
+                                  //do smth
 
                               }
                           });
@@ -260,7 +260,7 @@ namespace RecruitmentTest
                               {
                                   if (r.ResponseStatus == ResponseStatus.Completed)
                                   {
-                                      MessageBox.Show("New customerPlace added"); //TODO: remove before release
+                                      // do smth
 
                                   }
                               });
@@ -326,7 +326,7 @@ namespace RecruitmentTest
                   {
                       Places places = new Places();
                       places.DataContext = new PlacesWindowVM(_checker, this);
-                      places.ShowDialog(); // TODO: make modal window
+                      places.ShowDialog();
                       
                   }, (obj) => SelectedCustomer != null
                   ));
