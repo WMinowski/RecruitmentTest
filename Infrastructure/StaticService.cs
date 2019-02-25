@@ -1,5 +1,5 @@
 ﻿using DomainStandard;
-using MySql.Data.MySqlClient;
+using System.Data.SQLite;
 using System;
 using System.Collections.Generic;
 
@@ -12,20 +12,20 @@ namespace Infrastructure
         public static List<Place> places = new List<Place>();
         public static List<CustomerPlace> customersPlaces = new List<CustomerPlace>();
         public static string ConnectionString { get; set; }
-        public static MySqlDataAdapter adapter = new MySqlDataAdapter();
+        public static SQLiteDataAdapter adapter = new SQLiteDataAdapter();
 
-        public static MySqlConnection GetConnection()
+        public static SQLiteConnection GetConnection()
         {
-            return new MySqlConnection(ConnectionString);
+            return new SQLiteConnection(ConnectionString);
         }
 
         public static void GetData(string connectionString)
         {
             ConnectionString = connectionString;
-            using (MySqlConnection conn = GetConnection())
+            using (SQLiteConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.cities", conn);
+                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM cities", conn);
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -39,10 +39,10 @@ namespace Infrastructure
                 }
             }
 
-            using (MySqlConnection conn = GetConnection())
+            using (SQLiteConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.places", conn);
+                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM places", conn);
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -58,10 +58,10 @@ namespace Infrastructure
                 }
             }
 
-            using (MySqlConnection conn = GetConnection())
+            using (SQLiteConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.customers", conn); 
+                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM customers", conn); 
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -79,10 +79,10 @@ namespace Infrastructure
                 }
 
             }
-            using (MySqlConnection conn = GetConnection())
+            using (SQLiteConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.customersPlaces", conn); 
+                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM customersPlaces", conn); 
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())

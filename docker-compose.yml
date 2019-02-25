@@ -6,23 +6,3 @@ services:
     build:
       context: .
       dockerfile: RecruitmentTestAPI\Dockerfile
-    depends_on:
-      - db
-  db:
-    image: mysql:5.7
-
-    build:
-      context: ./MySQLDB
-      dockerfile: ./Dockerfile
-    ports:
-      - 3306:3306  
-    volumes:
-      - db-data:/var/lib/mysql   
-    networks:
-      - default
-volumes:
-  db-data:
-networks:
-  default:
-    external:
-      name: nat
