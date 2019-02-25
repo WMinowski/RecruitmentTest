@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RecruitmentTest"
         mc:Ignorable="d"
-        Title="MainWindow" Height="444" Width="800">
+        Title="MainWindow" Height="607.5" Width="728">
     <Window.Resources>
         <local:CustomerVM x:Key="data"/>
 
@@ -50,7 +50,7 @@
             <ColumnDefinition Width="496*"/>
             <ColumnDefinition Width="297*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="dataGrid1" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="386" Margin="10,10,0,0" VerticalAlignment="Top" Width="537" SelectedItem="{Binding SelectedCustomer}" Grid.ColumnSpan="2" ItemsSource="{Binding Customers}">
+        <DataGrid x:Name="dataGrid1" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="557" Margin="10,10,0,0" VerticalAlignment="Top" Width="537" SelectedItem="{Binding SelectedCustomer}" Grid.ColumnSpan="2" ItemsSource="{Binding Customers}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
                 <DataGridTextColumn Binding="{Binding FirstName}" Header="First name"/>
@@ -58,35 +58,40 @@
                 <DataGridTextColumn Binding="{Binding Place}" Header="Place"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Label Content="Name" HorizontalAlignment="Left" Margin="57,12,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="20" Grid.Column="1"/>
-        <Label Content="First Name" HorizontalAlignment="Left" Margin="57,54,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18" Grid.Column="1"/>
-        <Label Content="Date of Birth" HorizontalAlignment="Left" Margin="57,94,0,0" VerticalAlignment="Top" Height="36" Width="112" FontSize="18" Grid.Column="1"/>
-        <TextBox x:Name="textBoxName" Style="{StaticResource textBoxInError}" HorizontalAlignment="Left" Height="36" Margin="169,12,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" Grid.Column="1">
-            <TextBox.Text>
+        <StackPanel Grid.Column="1" Orientation="Vertical" Height="567" Margin="102,0,-9,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="177">
+            <Label Content="Name" HorizontalAlignment="Left" VerticalAlignment="Top" Height="36" Width="112" FontSize="20"/>
+            <TextBox x:Name="textBoxName" Style="{StaticResource textBoxInError}" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Top" Width="167">
                 <Binding Path= "TextBoxName" UpdateSourceTrigger="PropertyChanged" Mode = "TwoWay" ValidatesOnExceptions="True">
                     <Binding.ValidationRules>
                         <local:NoEmptyRule/>
                     </Binding.ValidationRules>
                 </Binding>
-            </TextBox.Text>
-        </TextBox>
-        <TextBox x:Name="textBoxFirstName" Style="{StaticResource textBoxInError}" HorizontalAlignment="Left" Height="36" Margin="169,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" Grid.Column="1">
-            <TextBox.Text>
+            </TextBox>
+            <Label Content="First Name" HorizontalAlignment="Left" VerticalAlignment="Top" Height="36" Width="112" FontSize="18"/>
+            <TextBox x:Name="textBoxFirstName" Style="{StaticResource textBoxInError}" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Top" Width="167">
                 <Binding Path= "TextBoxFirstName" UpdateSourceTrigger="PropertyChanged" Mode = "TwoWay" ValidatesOnExceptions="True">
                     <Binding.ValidationRules>
                         <local:NoEmptyRule/>
                     </Binding.ValidationRules>
                 </Binding>
-            </TextBox.Text>
-        </TextBox>
-        <Button Content="Add"  HorizontalAlignment="Left" Margin="57,284,0,0" VerticalAlignment="Top" Width="112" Height="32"  Command="{Binding AddCommand }" Grid.Column="1"/>
-        <Button Content="Remove" HorizontalAlignment="Left" Margin="173,284,0,0" VerticalAlignment="Top" Width="114" Height="32" Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
-        <Button Content="Update" HorizontalAlignment="Left" Margin="57,322,0,0" VerticalAlignment="Top" Width="112" Height="34" Command="{Binding UpdCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
-        <Button Content="Search" HorizontalAlignment="Left" Margin="173,322,0,0" VerticalAlignment="Top" Width="114" Height="34" Command="{Binding SearchCommand}" CommandParameter="{Binding SelectedCustomer}" Grid.Column="1"/>
-        <DatePicker x:Name="datePicker" SelectedDate="{Binding Path=SelectedDate}" Grid.Column="1" HorizontalAlignment="Left" Margin="169,94,0,0" VerticalAlignment="Top"  Height="36" Width="118"/>
-        <Button Content="Load DataBase" HorizontalAlignment="Left" Margin="57,362,0,0" VerticalAlignment="Top" Width="230" Height="34" Command="{Binding LoadCommand}" Grid.Column="1"/>
-        <ListBox Grid.Column="1" ItemsSource="{ Binding Path = Places }" SelectedItem="{Binding Path=SelectedPlace}" HorizontalAlignment="Left" Height="105" Margin="57,135,0,0" VerticalAlignment="Top" Width="230"/>
-        <Button Content="Edit Places..."  HorizontalAlignment="Left" Margin="57,245,0,0" VerticalAlignment="Top" Width="112" Height="32"  Command="{Binding EditPlacesCommand}" Grid.Column="1"/>
+            </TextBox>
+            <Label Content="Date of Birth" HorizontalAlignment="Left" VerticalAlignment="Top" Height="36" Width="112" FontSize="18"/>
+            <DatePicker x:Name="datePicker" SelectedDate="{Binding SelectedDate}" HorizontalAlignment="Left" VerticalAlignment="Top"  Height="36" Width="167"/>
+            <Separator Opacity="0" Height="2"/>
+            <ListBox ItemsSource="{Binding Places}" SelectedItem="{Binding SelectedPlace}" HorizontalAlignment="Left" Height="105" VerticalAlignment="Top" Width="167"/>
+            <Separator Opacity="0" Height="2"/>
+            <Button Content="Edit Places..."  HorizontalAlignment="Left" VerticalAlignment="Top" Width="167" Height="32"  Command="{Binding EditPlacesCommand}"/>
+            <Separator Opacity="0" Height="2"/>
+            <Button Content="Add"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="167" Height="32"  Command="{Binding AddCommand}"/>
+            <Separator Opacity="0" Height="2"/>
+            <Button Content="Remove" HorizontalAlignment="Left" VerticalAlignment="Top" Width="167" Height="32" Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedCustomer}"/>
+            <Separator Opacity="0" Height="2"/>
+            <Button Content="Update" HorizontalAlignment="Left" VerticalAlignment="Top" Width="167" Height="34" Command="{Binding UpdCommand}" CommandParameter="{Binding SelectedCustomer}"/>
+            <Separator Opacity="0" Height="2"/>
+            <Button Content="Search" HorizontalAlignment="Left" VerticalAlignment="Top" Width="167" Height="34" Command="{Binding SearchCommand}" CommandParameter="{Binding SelectedCustomer}"/>
+            <Separator Opacity="0" Height="2"/>
+            <Button Content="Load DataBase" HorizontalAlignment="Left" VerticalAlignment="Top" Width="167" Height="34" Command="{Binding LoadCommand}"/>
+        </StackPanel>
 
     </Grid>
 
