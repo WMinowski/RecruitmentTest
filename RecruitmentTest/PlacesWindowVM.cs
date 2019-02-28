@@ -106,7 +106,7 @@ namespace RecruitmentTest
 
                       try
                       {
-
+                          bool hasCollisions = false;
                           //CustomersPlaces Check
                           List<CustomerPlace> newCustomersPlaces = new List<CustomerPlace>();
                           var requestCustomersPlaces = new RestRequest("api/customerPlace", Method.GET);
@@ -121,12 +121,14 @@ namespace RecruitmentTest
                           if (newCustomersPlaces.Count > 0)
                           {
                               MessageBox.Show("Someone has just updated place! Please, resolve this conflict later.");
+                              hasCollisions = true;
                               // TODO: send event
                           }
 
 
                           // updating customer
                           CustomerVM newcustomer = new CustomerVM(new Customer(_mainWindowVM.SelectedCustomer.Id, _mainWindowVM.TextBoxName, _mainWindowVM.TextBoxFirstName, _mainWindowVM.SelectedDate, SelectedPlace.Place));
+                          newcustomer.Customer.HasCollisions = hasCollisions;
                           RestRequest requestUpdate = new RestRequest("api/customer/" + _mainWindowVM.SelectedCustomer.Id.ToString(), Method.PUT);
                           requestUpdate.AddJsonBody(newcustomer.Customer);
                           requestUpdate.RequestFormat = DataFormat.Json;

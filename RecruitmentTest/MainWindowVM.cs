@@ -219,6 +219,7 @@ namespace RecruitmentTest
                       {
                           try
                           {
+                              bool hasCollisions = false;
                               //CustomersPlaces Check
                               List<CustomerPlace> newCustomersPlaces = new List<CustomerPlace>();
                               var requestCustomersPlaces = new RestRequest("api/customerPlace", Method.GET);
@@ -235,11 +236,13 @@ namespace RecruitmentTest
                               if(newCustomersPlaces.Count > 0)
                               {
                                   MessageBox.Show("Someone has just updated customer! Please, resolve this conflict later.");
+                                  hasCollisions = true;
                               }
                               
 
                               // updating customer
                               CustomerVM newcustomer = new CustomerVM(new Customer(customer.Id, TextBoxName, TextBoxFirstName, SelectedDate, SelectedPlace.Place));
+                              newcustomer.Customer.HasCollisions = hasCollisions;
                               RestRequest requestUpdate = new RestRequest("api/customer/" + customer.Id.ToString(), Method.PUT);
                               requestUpdate.AddJsonBody(newcustomer.Customer);
                               requestUpdate.RequestFormat = DataFormat.Json;

@@ -13,6 +13,7 @@ namespace DomainStandard
         public string FirstName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public Place Place { get; set; }
+        public bool HasCollisions { get; set; } = false;
 
         public Customer() { }
 

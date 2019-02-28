@@ -88,8 +88,33 @@ namespace Infrastructure
                             c.Place = places.First(x => x.Id == Convert.ToInt32(reader["PlaceId"]));
                         }
                     }
-                }
+                    string lastUpdateTime = string.Empty;
+                    MySqlCommand lastUpdate = new MySqlCommand("select mydb.customersplaces.UpdateTime from mydb.customersplaces where CustomerId = " + c.Id + " order by mydb.customersplaces.UpdateTime desc limit 1");
+                    using (var reader = lastUpdate.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            lastUpdateTime = reader["UpdateTime"].ToString();
+                        }
+                    }
+                    List<CustomerPlace> collisions = new List<CustomerPlace>();
+                    MySqlCommand lastCollision = new MySqlCommand("select * from mydb.customersplaces where (mydb.customersplaces.UpdateTime > '" + lastUpdateTime + "'-15) AND (CustomerId = " + c.Id + ")");
+                    using (var reader = lastCollision.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            collisions.Add(new CustomerPlace()
+                            {
+                                Id = Convert.ToInt32(reader["Id"]),
+                                UpdateTime = Convert.ToDateTime(reader["UpdateTime"]),
+                                CustomerId = Convert.ToInt32(reader["CustomerId"]),
+                                PlaceId = Convert.ToInt32(reader["PlaceId"])
 
+                            });
+                        }
+                    }
+                    if(collisions.Count > 1) { c.HasCollisions = true; }
+                }
             }
             
         }
@@ -100,6 +125,7 @@ namespace Infrastructure
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
+
                 MySqlCommand cmd = new MySqlCommand("select * from mydb.customersplaces where mydb.customersplaces.UpdateTime > now()-15", conn);
                 using (var reader = cmd.ExecuteReader())
                 {

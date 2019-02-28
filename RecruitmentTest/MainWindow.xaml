@@ -37,6 +37,19 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="errorStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Padding" Value="-2"/>
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="Background" Value="Red"/>
+                    <Setter Property="ToolTip" 
+                Value="{Binding RelativeSource={RelativeSource Self},
+                  Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <ControlTemplate x:Key="validationTemplate">
             <DockPanel>
                 <TextBlock Foreground="Red" FontSize="20">!</TextBlock>
@@ -50,13 +63,32 @@
             <ColumnDefinition Width="496*"/>
             <ColumnDefinition Width="297*"/>
         </Grid.ColumnDefinitions>
+        
         <DataGrid x:Name="dataGrid1" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="450" Margin="10,10,0,0" VerticalAlignment="Top" Width="537" SelectedItem="{Binding SelectedCustomer}" Grid.ColumnSpan="2" ItemsSource="{Binding Customers}">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
-                <DataGridTextColumn Binding="{Binding FirstName}" Header="First name"/>
-                <DataGridTextColumn Binding="{Binding DateOfBirth}" Header="Date of birth"/>
-                <DataGridTextColumn Binding="{Binding Place}" Header="Place"/>
+                <DataGridTextColumn Binding="{Binding Name, ValidatesOnExceptions=True}" Header="Name" EditingElementStyle="{StaticResource errorStyle}"/>
+                <DataGridTextColumn Binding="{Binding FirstName, ValidatesOnExceptions=True}" Header="First name" EditingElementStyle="{StaticResource errorStyle}"/>
+                <DataGridTextColumn Binding="{Binding DateOfBirth, ValidatesOnExceptions=True}" Header="Date of birth" EditingElementStyle="{StaticResource errorStyle}"/>
+                <DataGridTextColumn Binding="{Binding Place, ValidatesOnExceptions=True}" Header="Place" EditingElementStyle="{StaticResource errorStyle}"/>
             </DataGrid.Columns>
+            <DataGrid.RowValidationErrorTemplate>
+                <ControlTemplate>
+                    <Grid Margin="0,-2,0,-2"
+                        ToolTip="{Binding RelativeSource={RelativeSource
+                        FindAncestor, AncestorType={x:Type DataGridRow}},
+                        Path=(Validation.Errors)[0].ErrorContent}">
+                        <Ellipse StrokeThickness="0" Fill="Red" 
+                            Width="{TemplateBinding FontSize}" 
+                            Height="{TemplateBinding FontSize}" />
+                        <TextBlock Text="!" FontSize="{TemplateBinding FontSize}" 
+                            FontWeight="Bold" Foreground="White" 
+                            HorizontalAlignment="Center"  />
+                    </Grid>
+                </ControlTemplate>
+            </DataGrid.RowValidationErrorTemplate>
+            <DataGrid.RowValidationRules>
+                <local:CollisionRule ValidatesOnTargetUpdated="True" ValidationStep="UpdatedValue" />
+            </DataGrid.RowValidationRules>
         </DataGrid>
         <StackPanel Grid.Column="1" Orientation="Vertical" Height="460" Margin="102,0,-9,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="177">
             <Label Content="Name" HorizontalAlignment="Left" VerticalAlignment="Top" Height="36" Width="112" FontSize="20"/>
