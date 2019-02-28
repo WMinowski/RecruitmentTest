@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Infrastructure
 {
-    public class PlaceService : ICRUD
+    public class PlaceService : ICommands, IQueries
     {
         public PlaceService()
         {

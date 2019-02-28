@@ -44,7 +44,7 @@ namespace RecruitmentTest
 
         public override string ToString()
         {
-            return _place.City.Name+", "+_place.Street;
+            return _place.ToString();
         }
 
         public PlaceVM(int id, int cityId, string street)

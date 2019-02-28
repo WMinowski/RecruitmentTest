@@ -60,7 +60,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="IErrorChecker.cs" />
-    <Compile Include="MarginSetter.cs" />
     <Compile Include="NoEmptyRule.cs" />
     <Compile Include="Places.xaml.cs">
       <DependentUpon>Places.xaml</DependentUpon>

@@ -18,5 +18,9 @@ namespace DomainStandard
             City = city;
             Street = street;
         }
+        public override string ToString()
+        {
+            return City.Name + ", " + Street;
+        }
     }
 }

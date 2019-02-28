@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Infrastructure
 {
-    public class CustomerPlaceService : ICRUD
+    public class CustomerPlaceService : ICommands, IQueries
     {
         
         public CustomerPlaceService()
@@ -89,6 +89,7 @@ namespace Infrastructure
 
         public List<IDBEntity> Get()
         {
+            StaticService.LoadCustomersPlaces();
             return new List<IDBEntity>(StaticService.customersPlaces.FindAll(customerPlace => true));
         }
     }

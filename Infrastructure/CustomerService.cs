@@ -4,7 +4,7 @@ using MySql.Data.MySqlClient;
 
 namespace Infrastructure
 {
-    public class CustomerService : ICRUD
+    public class CustomerService : ICommands, IQueries
     {
        
         public CustomerService ()

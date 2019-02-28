@@ -9,12 +9,6 @@ namespace RecruitmentTest
     {
         
         private Customer _customer;
-        private PlaceVM _place;
-        
-        public PlaceVM Place
-        {
-            get { return _place; }
-        }
         public Customer Customer
         {
             get { return _customer; }
@@ -56,10 +50,14 @@ namespace RecruitmentTest
                 OnPropertyChanged("DateOfBirth");
             }
         }
-        public string PlaceToString //TODO: Remove&replace calls
+        public Place Place
         {
-            get { return Place.ToString(); }
-            // no set
+            get { return _customer.Place; }
+            set
+            {
+                _customer.Place = value;
+                OnPropertyChanged("Place");
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -73,9 +71,8 @@ namespace RecruitmentTest
 
         public CustomerVM() { }
 
-        public CustomerVM(Customer c, PlaceVM p)
+        public CustomerVM(Customer c)
         {
-            _place = p;
             _customer = c;
             Id = _customer.Id;
             Name = _customer.Name;

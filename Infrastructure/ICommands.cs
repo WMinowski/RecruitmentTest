@@ -5,13 +5,11 @@ using DomainStandard;
 
 namespace Infrastructure
 {
-    interface ICRUD
+    interface ICommands
     {
         void Remove(int id);
         void Remove(IDBEntity entity);
         void Update(int id, IDBEntity entity);
         IDBEntity Create(IDBEntity entity);
-        IDBEntity Get(int id);
-        List<IDBEntity> Get();
     }
 }

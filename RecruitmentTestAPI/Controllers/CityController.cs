@@ -44,43 +44,5 @@ namespace RecruitmentTestAPI.Controllers
 
             return city as City;
         }
-
-        [HttpPost]
-        public ActionResult<City> Create(City city)
-        {
-            _cityService.Create(city);
-
-            return CreatedAtRoute("GetCity", new { id = city.Id.ToString() }, city);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Update(string id, City cityIn)
-        {
-            var city = _cityService.Get(int.Parse(id));
-
-            if (city == null)
-            {
-                return NotFound();
-            }
-
-            _cityService.Update(int.Parse(id), cityIn);
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(string id)
-        {
-            var city = _cityService.Get(int.Parse(id));
-
-            if (city == null)
-            {
-                return NotFound();
-            }
-
-            _cityService.Remove(city.Id);
-
-            return NoContent();
-        }
     }
 }

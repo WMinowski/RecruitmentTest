@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Infrastructure
 {
@@ -57,11 +58,11 @@ namespace Infrastructure
                     }
                 }
             }
-
+            
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.customers", conn); 
+                MySqlCommand cmd = new MySqlCommand("select * from mydb.customers", conn); 
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -77,12 +78,29 @@ namespace Infrastructure
 
                     }
                 }
+                foreach(Customer c in customers)
+                {
+                    MySqlCommand command = new MySqlCommand("select mydb.customersplaces.PlaceId from mydb.customersplaces where CustomerId = " + c.Id + " order by mydb.customersplaces.UpdateTime desc limit 1", conn);
+                    using(var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            c.Place = places.First(x => x.Id == Convert.ToInt32(reader["PlaceId"]));
+                        }
+                    }
+                }
 
             }
+            
+        }
+
+        public static void LoadCustomersPlaces()
+        {
+            customersPlaces.Clear();
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM mydb.customersPlaces", conn); 
+                MySqlCommand cmd = new MySqlCommand("select * from mydb.customersplaces where mydb.customersplaces.UpdateTime > now()-15", conn);
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -94,7 +112,7 @@ namespace Infrastructure
                             UpdateTime = Convert.ToDateTime(reader["UpdateTime"]),
                             CustomerId = Convert.ToInt32(reader["CustomerId"]),
                             PlaceId = Convert.ToInt32(reader["PlaceId"])
-                            
+
                         });
 
                     }

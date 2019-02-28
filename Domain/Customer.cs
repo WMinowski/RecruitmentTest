@@ -12,17 +12,17 @@ namespace DomainStandard
         public string Name { get; set; }
         public string FirstName { get; set; }
         public DateTime DateOfBirth { get; set; }
-
+        public Place Place { get; set; }
 
         public Customer() { }
 
-        public Customer(int id, string name, string firstName, DateTime dateOfBirth)
+        public Customer(int id, string name, string firstName, DateTime dateOfBirth, Place place)
         {
             Id = id;
             Name = name;
             FirstName = firstName;
             DateOfBirth = dateOfBirth;
-
+            Place = place;
         }
     }
 

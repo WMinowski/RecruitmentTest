@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RecruitmentTest"
         mc:Ignorable="d"
-        Title="Places" Height="247.702" Width="483.106">
+        Title="Places" Height="284.594" Width="478.714">
     <Window.Resources>
         <!--The tool tip for the TextBox to display the validation error message.-->
         <Style x:Key="textBoxInError" TargetType="{x:Type TextBox}">
@@ -18,14 +18,14 @@
         </Style>
 
     </Window.Resources>
-    <Grid Margin="0,0,2,13">
-        <DataGrid ItemsSource="{Binding Places}" SelectedItem="{Binding SelectedPlace}" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="188" Margin="10,10,0,0" VerticalAlignment="Top" Width="323">
+    <Grid Margin="0,0,12,13">
+        <DataGrid ItemsSource="{Binding Places}" SelectedItem="{Binding SelectedPlace}" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="227" Margin="10,10,0,0" VerticalAlignment="Top" Width="323">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Street}" Header="Street"/>
                 <DataGridTextColumn Binding="{Binding City}" Header="City"/>
             </DataGrid.Columns>
         </DataGrid>
-        <StackPanel HorizontalAlignment="Left" Height="188" Margin="338,10,0,0" VerticalAlignment="Top" Width="124">
+        <StackPanel HorizontalAlignment="Left" Height="227" Margin="338,10,0,0" VerticalAlignment="Top" Width="124">
             <Label Content="Street" HorizontalAlignment="Left" VerticalAlignment="Top" Height="36" Width="112" FontSize="18"/>
             <TextBox x:Name="textBoxStreet" Style="{StaticResource textBoxInError}"  HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Top" Width="112">
                 <Binding Path= "TextBoxStreet" UpdateSourceTrigger="PropertyChanged" Mode = "TwoWay" ValidatesOnExceptions="True">
@@ -38,6 +38,8 @@
             <ComboBox x:Name="comboBoxCity" HorizontalAlignment="Left" VerticalAlignment="Top" Width="112" Height="36" ItemsSource="{Binding Cities}" SelectedItem="{Binding SelectedCity}" DisplayMemberPath="Name" />
             <Separator Opacity="0" Height="2"/>
             <Button Content="Add"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="112" Height="32"  Command="{Binding AddCommand}"/>
+            <Separator Opacity="0" Height="2"/>
+            <Button Content="Set Place"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="112" Height="32"  Command="{Binding SetPlaceCommand}"/>
         </StackPanel>
 
     </Grid>
