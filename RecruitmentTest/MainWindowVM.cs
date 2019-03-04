@@ -349,7 +349,7 @@ namespace RecruitmentTest
 
         public MainWindowVM(IErrorChecker checker)
         {
-            LoadDatabase();
+            //LoadDatabase();
             _checker = checker;
             ClearText();
         }

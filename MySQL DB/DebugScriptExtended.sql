@@ -15,6 +15,8 @@
 #select mydb.customers.Name, mydb.customers.FirstName, mydb.customers.DateOfBirth, mydb.customers.Street, mydb.cities.City from mydb.customers left join mydb.cities on mydb.customers.CityId=mydb.cities.Id where(Name = 'Kuznetsov')and(FirstName = 'Sergey')and(DateOfBirth = '1973-06-08')and(Street = 'street')and(CityId = '1')
 #DELETE FROM mydb.customers WHERE (Id = '3');
 #insert into mydb.customersplaces values(0, now(), 2, 1);
-select mydb.customersplaces.UpdateTime from mydb.customersplaces where CustomerId = 2 order by mydb.customersplaces.UpdateTime desc limit 1
+#select mydb.customersplaces.UpdateTime from mydb.customersplaces where CustomerId = 2 order by mydb.customersplaces.UpdateTime desc limit 1
 #select mydb.customers.Id, mydb.customers.Name, mydb.customers.FirstName, mydb.customers.DateOfBirth, mydb.customersplaces.PlaceId from mydb.customers left join mydb.customersplaces on mydb.customers.Id = mydb.customersplaces.CustomerId
 #select * from mydb.customersplaces where mydb.customersplaces.UpdateTime > now()-15
+#delete from mydb.customersplaces 
+select * from mydb.customersplaces

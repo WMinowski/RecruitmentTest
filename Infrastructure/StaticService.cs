@@ -81,34 +81,34 @@ namespace Infrastructure
                 foreach(Customer c in customers)
                 {
                     MySqlCommand command = new MySqlCommand("select mydb.customersplaces.PlaceId from mydb.customersplaces where CustomerId = " + c.Id + " order by mydb.customersplaces.UpdateTime desc limit 1", conn);
-                    using(var reader = command.ExecuteReader())
+                    using(var reader1 = command.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (reader1.Read())
                         {
-                            c.Place = places.First(x => x.Id == Convert.ToInt32(reader["PlaceId"]));
+                            c.Place = places.First(x => x.Id == Convert.ToInt32(reader1["PlaceId"]));
                         }
                     }
                     string lastUpdateTime = string.Empty;
-                    MySqlCommand lastUpdate = new MySqlCommand("select mydb.customersplaces.UpdateTime from mydb.customersplaces where CustomerId = " + c.Id + " order by mydb.customersplaces.UpdateTime desc limit 1");
-                    using (var reader = lastUpdate.ExecuteReader())
+                    MySqlCommand lastUpdate = new MySqlCommand("select mydb.customersplaces.UpdateTime from mydb.customersplaces where mydb.customersplaces.customerId = " + c.Id + " order by mydb.customersplaces.UpdateTime desc limit 1", conn);
+                    using (var reader2 = lastUpdate.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (reader2.Read())
                         {
-                            lastUpdateTime = reader["UpdateTime"].ToString();
+                            lastUpdateTime = reader2["UpdateTime"].ToString();
                         }
                     }
                     List<CustomerPlace> collisions = new List<CustomerPlace>();
-                    MySqlCommand lastCollision = new MySqlCommand("select * from mydb.customersplaces where (mydb.customersplaces.UpdateTime > '" + lastUpdateTime + "'-15) AND (CustomerId = " + c.Id + ")");
-                    using (var reader = lastCollision.ExecuteReader())
+                    MySqlCommand lastCollision = new MySqlCommand("select * from mydb.customersplaces where (mydb.customersplaces.UpdateTime > '" + lastUpdateTime + "'-15) AND (CustomerId = " + c.Id + ")", conn);
+                    using (var reader3 = lastCollision.ExecuteReader())
                     {
-                        while (reader.Read())
+                        while (reader3.Read())
                         {
                             collisions.Add(new CustomerPlace()
                             {
-                                Id = Convert.ToInt32(reader["Id"]),
-                                UpdateTime = Convert.ToDateTime(reader["UpdateTime"]),
-                                CustomerId = Convert.ToInt32(reader["CustomerId"]),
-                                PlaceId = Convert.ToInt32(reader["PlaceId"])
+                                Id = Convert.ToInt32(reader3["Id"]),
+                                UpdateTime = Convert.ToDateTime(reader3["UpdateTime"]),
+                                CustomerId = Convert.ToInt32(reader3["CustomerId"]),
+                                PlaceId = Convert.ToInt32(reader3["PlaceId"])
 
                             });
                         }
@@ -143,7 +143,6 @@ namespace Infrastructure
 
                     }
                 }
-
             }
         }
     }
