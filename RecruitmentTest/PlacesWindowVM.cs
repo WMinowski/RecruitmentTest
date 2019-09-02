@@ -107,6 +107,8 @@ namespace RecruitmentTest
                       try
                       {
                           bool hasCollisions = false;
+                          CustomerVM newcustomer = new CustomerVM(new Customer(_mainWindowVM.SelectedCustomer.Id, _mainWindowVM.TextBoxName, _mainWindowVM.TextBoxFirstName, _mainWindowVM.SelectedDate, SelectedPlace.Place));
+                          CustomerPlace customerPlace = new CustomerPlace(0, DateTime.Now, newcustomer.Id, newcustomer.Place.Id);
                           //CustomersPlaces Check
                           List<CustomerPlace> newCustomersPlaces = new List<CustomerPlace>();
                           var requestCustomersPlaces = new RestRequest("api/customerPlace", Method.GET);
@@ -122,12 +124,11 @@ namespace RecruitmentTest
                           {
                               MessageBox.Show("Someone has just updated place! Please, resolve this conflict later.");
                               hasCollisions = true;
-                              // TODO: send event
                           }
-
+                          else if (newCustomersPlaces.Last().PlaceId == customerPlace.PlaceId) return; // 
 
                           // updating customer
-                          CustomerVM newcustomer = new CustomerVM(new Customer(_mainWindowVM.SelectedCustomer.Id, _mainWindowVM.TextBoxName, _mainWindowVM.TextBoxFirstName, _mainWindowVM.SelectedDate, SelectedPlace.Place));
+                          
                           newcustomer.Customer.HasCollisions = hasCollisions;
                           RestRequest requestUpdate = new RestRequest("api/customer/" + _mainWindowVM.SelectedCustomer.Id.ToString(), Method.PUT);
                           requestUpdate.AddJsonBody(newcustomer.Customer);
@@ -139,7 +140,7 @@ namespace RecruitmentTest
                           _restClient.Execute(requestUpdate);
 
                           // adding new customerPlace
-                          CustomerPlace customerPlace = new CustomerPlace(0, DateTime.Now, newcustomer.Id, newcustomer.Place.Id);
+                          
                           RestRequest requestCustomerPlace = new RestRequest("api/customerPlace/", Method.POST);
                           requestCustomerPlace.RequestFormat = DataFormat.Json;
                           requestCustomerPlace.AddJsonBody(customerPlace);

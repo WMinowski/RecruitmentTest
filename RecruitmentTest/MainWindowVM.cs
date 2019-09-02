@@ -220,6 +220,9 @@ namespace RecruitmentTest
                           try
                           {
                               bool hasCollisions = false;
+                              CustomerVM newcustomer = new CustomerVM(new Customer(customer.Id, TextBoxName, TextBoxFirstName, SelectedDate, SelectedPlace.Place));
+                              CustomerPlace customerPlace = new CustomerPlace(0, DateTime.Now, newcustomer.Id, newcustomer.Place.Id);
+
                               //CustomersPlaces Check
                               List<CustomerPlace> newCustomersPlaces = new List<CustomerPlace>();
                               var requestCustomersPlaces = new RestRequest("api/customerPlace", Method.GET);
@@ -232,7 +235,6 @@ namespace RecruitmentTest
                                   }
                               }
 
-
                               if(newCustomersPlaces.Count > 0)
                               {
                                   MessageBox.Show("Someone has just updated customer! Please, resolve this conflict later.");
@@ -241,7 +243,7 @@ namespace RecruitmentTest
                               
 
                               // updating customer
-                              CustomerVM newcustomer = new CustomerVM(new Customer(customer.Id, TextBoxName, TextBoxFirstName, SelectedDate, SelectedPlace.Place));
+                              
                               newcustomer.Customer.HasCollisions = hasCollisions;
                               RestRequest requestUpdate = new RestRequest("api/customer/" + customer.Id.ToString(), Method.PUT);
                               requestUpdate.AddJsonBody(newcustomer.Customer);
@@ -253,7 +255,7 @@ namespace RecruitmentTest
                               _restClient.Execute(requestUpdate);
 
                               // adding new customerPlace
-                              CustomerPlace customerPlace = new CustomerPlace(0, DateTime.Now, newcustomer.Id, newcustomer.Place.Id);
+                              
                               RestRequest requestCustomerPlace = new RestRequest("api/customerPlace/", Method.POST);
                               requestCustomerPlace.RequestFormat = DataFormat.Json;
                               requestCustomerPlace.AddJsonBody(customerPlace);
@@ -349,7 +351,6 @@ namespace RecruitmentTest
 
         public MainWindowVM(IErrorChecker checker)
         {
-            //LoadDatabase();
             _checker = checker;
             ClearText();
         }

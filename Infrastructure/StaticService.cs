@@ -15,6 +15,7 @@ namespace Infrastructure
         public static string ConnectionString { get; set; }
         public static MySqlDataAdapter adapter = new MySqlDataAdapter();
 
+        // Debug only
         public static MySqlConnection GetConnection()
         {
             return new MySqlConnection(ConnectionString);
